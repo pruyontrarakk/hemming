@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script>
+//   $(document).ready(function () {
+//     console.log("HEY")
+//     $.ajax({
+//         url: "/findpopularitems",
+//         method: "GET",
+//         dataType: "json",
+//         success: function(data) {
+//             console.log(data);
+//             displayItems(data, "populardrinks");
+//         },
+//         error: function(request, status, error){
+//             console.log("Error");
+//             console.log(request)
+//             console.log(status)
+//             console.log(error)
+//         }
+
+//     });
+//   });
+
+//   function displayItems(items, containerId) {
+//     let htmlContent = "";  // Stores the generated HTML
+
+//     items.forEach(item => {
+//         htmlContent += `
+//             <div class="col-md-12 popular-item">
+//                 <div class="row">
+//                     <div class="col-md-3 d-flex align-items-center justify-content-center popimgdiv">
+//                         <a href="/view/${item.id}">
+//                             <img src="${item.image}" alt="Image of ${item.name}" class="popular-item-img">
+//                         </a>
+//                     </div>
+//                     <div class="col-md-9 popular-item-details">
+//                         <a href="/view/${item.id}" class="popular-item-name">${item.name}</a>
+//                         <p class="popular-item-caffeine">${item.caffeinemg} mg caffeine</p>
+//                         <p class="popular-item-ingredients">Ingredients: ${item.ingredients.join(", ")}</p>
+//                     </div>
+//                 </div>
+//             </div>
+
+//         `;
+//     });
+
+//     // Inject HTML into the specified container
+//     $(`#${containerId}`).html(htmlContent);
+// }
+
+
+
+</script>
+<div id="homediv">
+    <h1 id="hometitle">CAFE DRINKS EXPLORER</h1>
+    <div id="homesubtitle">cafe hopper's guide to finding new cafe drinks</div>
+    <img id="homepic" src="https://www.getflavor.com/wp-content/uploads/2021/09/Latte-and-Tea-Mojito-1152.jpg" alt="photo of 3 cafe drinks">
+    <div id="homedescription">
+        <span>
+            Love trying new cafe drinks? <br>
+            <span id="moredescript">
+                Whether you're a seasoned cafe hopper who loves exploring unique flavors or someone simply searching for your next favorite latte, Cafe Drinks Explorer is your go-to guide for discovering exciting new beverages. Dive into a world of rich aromas, bold tastes, and comforting sips as you learn about different drinks, their ingredients, and the perfect pairings. From classic espresso blends to innovative tea infusions, let us help you uncover hidden gems, expand your palate, and make every cafe visit an adventure worth savoring.
+            </span>
+        </span>
+    </div>
+    
+    <hr id="linehome">
+    <h4 id="mostpoplabel">MOST POPULAR DRINKS THIS WEEK:</h3>
+    <div class="container">
+        <div class="row" id="populardrinks">
+            <!-- Dynamic items will be loaded here via AJAX -->
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}
