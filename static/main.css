@@ -42,7 +42,6 @@
     font-size: 20pt;
     font-weight: 100;
     margin-bottom: 10px;
-    /* background-color: #DDE5B6; */
     color: #6E6E6E;
 }
 #homepic {
@@ -52,7 +51,6 @@
 #homedescription {
     font-family: 'Gill Sans';
     text-align: left;
-    /* background-color: #DDE5B6; */
     padding-top: 10px;
     padding-bottom: 10px;
     color: #6E6E6E;
@@ -85,9 +83,6 @@
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: left;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: center; */
     margin-bottom: 20px;
     
 }
@@ -105,9 +100,7 @@
 
 .popular-item-details {
     font-size: 13px;
-    /* display: flex; */
     flex-direction: column;
-    /* align-items: center; */
     margin-top: 5px;
     font-family: 'Georgia';
     color: #6E6E6E;
@@ -148,13 +141,12 @@
     justify-content: center;
 } */
 
-/* Highlight search matches */
-.highlight {
+/* .highlight {
     background-color: #DDE5B6;
-    /* font-weight: bold; */
-    /* padding: 3px; */
-}
-.title {
+    font-weight: bold;
+    padding: 3px;
+} */
+/* .title {
     font-size: 30pt;
     margin-bottom: 5px;
     font-family: 'Gill Sans';
@@ -192,7 +184,6 @@ label {
 .itemtitle {
     margin-bottom: 0px;
     margin-top: 10px;
-    /* display: inline; */
 }
 .viewlabel {
     font-family: 'Gill Sans';
@@ -226,8 +217,6 @@ label {
 }
 
 .similar-item-div {
-    /* border-style: solid;
-    border-color: red; */
     margin-bottom: 5px;
     margin-top: 2px;
     padding-left: 10px;
@@ -285,5 +274,5 @@ label {
 
 #searchinput {
     margin-right: 10px;
-}
- */
+} */
+
