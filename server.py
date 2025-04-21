@@ -1,7 +1,7 @@
 # Skyla Cui sc5146
 
 from flask import Flask
-from flask import render_template, Response, request, jsonify, url_for
+from flask import render_template, Response, request, jsonify, url_for, redirect
 
 app = Flask(__name__)
 
@@ -98,13 +98,142 @@ data = {
     }
 }
 
+
+hem_steps = [
+    {
+        "title": "Introduction to Hemming",
+        "images": ["1.1.png", "1.2.png"],
+        "html": """
+        <p><strong>What is hemming?</strong><br>
+        A technique to finish the edge of fabric to prevent fraying and give a clean look.</p>
+        <p><strong>When do you hem?</strong><br>
+        Shortening garments, finishing handmade items, adjusting curtains, etc.</p>
+        <p><strong>Why hand stitch your hem?</strong><br>
+        More control, invisible finishes, great for delicate or thick fabrics.</p>
+        """
+    },
+    {
+        "title": "Tools You'll Need to Hem",
+        "images": ["2.1.png"],
+        "html": """
+        <ul>
+            <li>Needle (sharp, small-eyed)</li>
+            <li>Thread (matching the fabric color)</li>
+            <li>Pins or clips</li>
+            <li>Scissors</li>
+            <li>Measuring tape</li>
+            <li>Iron (optional but recommended)</li>
+        </ul>
+        """
+    },
+    {
+        "title": "Step 1: Mark your hemline with chalk or pins",
+        "images": ["3.1.png"],
+        "instructions": [
+            "Try on the garment and make a small mark for approximate length",
+            "Use chalk or pins to create a visible, removable guide",
+            "Mark evenly across the full width for a straight hem",
+            "Double-check that the marked hemline is level",
+            "Try on the garment and check the length"
+        ]
+    },
+    {
+        "title": "Step 2: Fold up the raw edge once (¼”–½”) and press",
+        "images": ["4.1.png"],
+        "instructions": [
+            "Fold up the raw edge by ¼–½ inch",
+            "Use a measuring tape for consistency across the garment",
+            "Press to set the fold and keep fabric from shifting, using an iron if needed",
+            "Make sure all of the raw edge is hidden for a clean finish"
+        ]
+    },
+    {
+        "title": "Step 3: Fold again to desired hem depth and press",
+        "images": ["5.1.png"],
+        "instructions": [
+            "Fold to the final hem depth (e.g., 1–2 inches)",
+            "Match the hemline to your original markings from part 1",
+            "Press firmly to crease the fold cleanly, using an iron if needed",
+            "Take care to align any curves or seams"
+        ]
+    },
+    {
+        "title": "Step 4: Pin in place to secure",
+        "images": ["6.1.png"],
+        "instructions": [
+            "Pin horizontally and evenly along the fold",
+            "This step secures everything before stitching begins",
+            "Now you’re ready to start sewing!"
+        ]
+    },
+
+    {
+        "title": "Choosing your hemming stitch type (Backstitch vs Slip stitch)",
+        "images": [],
+        "html": """
+        <div style="display: flex; gap: 4rem;">
+            <div>
+                <strong>Why Backstitch</strong>
+                <ul>
+                    <li>Provides one of the strongest, most durable seams in hand sewing</li>
+                    <li>Ideal for structural seams (e.g. garment construction, bag straps, repairs)</li>
+                    <li>Cleaner and tighter, which are better for edges</li>
+                    <li>Machine-like finish without using a machine</li>
+                </ul>
+            </div>
+            <div>
+                <strong>Slip stitch</strong>
+                <ul>
+                    <li>Nearly invisible on the outside — perfect for clean, professional-looking hems</li>
+                    <li>Ideal for finishing hems on dress pants, skirts, formalwear, and curtains</li>
+                    <li>Great for delicate or lightweight fabrics</li>
+                    <li>Flexible and forgiving — allows the hem to move naturally without puckering</li>
+                </ul>
+            </div>
+        </div>
+        """
+    },
+    {
+        "title": "How to Identify (Backstitch vs Slip stitch)",
+        "images": ["8.1.png", "8.2.png", "8.3.png", "8.4.png"],
+        "html": """
+        <div style="display: flex; gap: 4rem;">
+            <div>
+                <strong>Backstitch</strong><br><br>
+                <em>Frontside:</em><br>
+                <p>A solid, continuous line of stitching that resembles machine sewing, with no gaps between stitches.</p>
+                <em>Backside:</em><br>
+                <p>A series of overlapping or slightly offset stitches, creating a somewhat dashed or broken line effect.</p>
+            </div>
+            <div>
+                <strong>Slip stitch</strong><br><br>
+                <em>Frontside:</em><br>
+                <p>Nearly invisible, with only small, evenly spaced out stitches.</p>
+                <em>Backside:</em><br>
+                <p>Thread travels hidden within the hem fold, creating a long horizontal stitch line.</p>
+            </div>
+        </div>
+        """
+    }
+]
+
+
+
 @app.route('/')
 def home():
    return render_template('home.html')   
 
+
 @app.route('/hem')
-def hem():
-   return render_template('home.html')   
+def hem_index():
+    return redirect(url_for('hem_step', step=0))
+
+@app.route('/hem/<int:step>')
+def hem_step(step):
+    return render_template("hem.html", step=hem_steps[step], step_num=step,
+                           prev_step=step - 1 if step > 0 else None,
+                           next_step=step + 1 if step < len(hem_steps) - 1 else None)
+
 
 @app.route('/backstitch')
 def backstitch():
