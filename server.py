@@ -256,6 +256,53 @@ backstitch_steps = [
 ]
 
 
+slipstitch_steps = [
+    {
+        "title": "Step 1: Thread the needle",
+        "media": ["1.1.png", "1.2.mov"],
+        "instructions": [
+            "Make sure to use a thread that is a similar color to the fabric for a seamless look",
+            "Tie a knot on one end of the thread after threading thread onto the needle"
+        ]
+    },
+    {
+        "title": "Step 2: Tiny Stitch in Outer Fabric",
+        "media": ["2.1.mov", "2.2.mov"],
+        "instructions": [
+            "Insert the needle through the fabric.",
+            "Take a small horizontal stitch (just 1–2 threads deep) from the main fabric, just above the folded edge.",
+            "Make sure the distance between the previous stitch and this one is very small.",
+            "This is the part of the slip stitch that takes the most precision!"
+        ]
+    },
+    {
+        "title": "Step 3: Slide Needle Inside the Fold",
+        "media": ["3.1.png", "3.2.mov"],
+        "instructions": [
+            "Insert the needle into the fold directly across from where it exited, and run it ¼–½ inch through the fold before coming out.",
+            "This allows the thread to stay hidden in the back of the fabric."
+        ]
+    },
+    {
+        "title": "Step 4: Repeat!",
+        "media": ["4.1.png"],
+        "instructions": [
+            "Repeat steps 2 and 3 until you reach the end!"
+        ]
+    },
+    {
+        "title": "Step 5: Tie knot at the end",
+        "media": ["5.1.png", "5.2.png", "5.3.mov"],
+        "instructions": [
+            "Loop the thread through a small part of fabric",
+            "Tie a knot before pulling all the way",
+            "Pull on the knot and all all thread to go through"
+        ]
+    },
+]
+
+
+
 
 @app.route('/')
 def home():
@@ -283,10 +330,17 @@ def backstitch_step(step):
                            prev_step=step - 1 if step > 0 else None,
                            next_step=step + 1 if step < len(backstitch_steps) - 1 else None)
 
-
 @app.route('/slipstitch')
-def slipstitch():
-   return render_template('home.html')   
+def slipstitch_index():
+    return redirect(url_for('slipstitch_step', step=0))
+
+@app.route('/slipstitch/<int:step>')
+def slipstitch_step(step):   # singular!
+    return render_template("slipstitch.html", step=slipstitch_steps[step],
+                           prev_step=step - 1 if step > 0 else None,
+                           next_step=step + 1 if step < len(slipstitch_steps) - 1 else None)
+
+
 
 @app.route('/quiz')
 def quiz():
