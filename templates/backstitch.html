@@ -1,0 +1,71 @@
+{% extends "template.html" %}
+
+{% block content %}
+  <style>
+    .step-title {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .media-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .media-row img,
+    .media-row video {
+      max-width: 30%;
+      border: 1px solid #ccc;
+    }
+    ul {
+      list-style-type: circle;
+      padding-left: 1.2rem;
+    }
+    .nav {
+      margin-top: 2rem;
+    }
+    .nav a {
+      margin-right: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      text-decoration: none;
+      color: #000;
+    }
+  </style>
+
+  <div class="step-title">{{ step.title }}</div>
+
+  {% if step.media %}
+    <div class="media-row">
+      {% for item in step.media %}
+        {% if item.endswith(".png") or item.endswith(".jpg") or item.endswith(".jpeg") %}
+          <img src="{{ url_for('static', filename='media/backstitch/' + item) }}" alt="step image">
+        {% elif item.endswith(".mov") or item.endswith(".mp4") %}
+          <video controls>
+            <source src="{{ url_for('static', filename='media/backstitch/' + item) }}">
+            Your browser does not support the video tag.
+          </video>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if step.instructions %}
+    <ul>
+      {% for line in step.instructions %}
+        <li>{{ line }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div class="nav">
+    {% if prev_step is not none %}
+      <a href="{{ url_for('backstitch_step', step=prev_step) }}">← Previous</a>
+    {% endif %}
+    {% if next_step is not none %}
+      <a href="{{ url_for('backstitch_step', step=next_step) }}">Next →</a>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -218,6 +218,44 @@ hem_steps = [
 ]
 
 
+backstitch_steps = [
+    {
+        "title": "Step 1: Thread the needle",
+        "media": ["1.1.png", "1.2.mov"],
+        "instructions": [
+            "Make sure to use a thread that is a similar color to the fabric for a seamless look",
+            "Tie a knot on one end of the thread after threading the needle"
+        ]
+    },
+    {
+        "title": "Step 2: The starting stitch",
+        "media": ["2.1.png", "2.2.png", "2.3.mov"],
+        "instructions": [
+            "Place needle through fabric from underneath",
+            "Thread it to the back (the right side of the original stitch) and then up in front (on the left side of the original stitch)"
+        ]
+    },
+    {
+        "title": "Step 3: Stitching backwards (repeat this step until complete)",
+        "media": ["3.1.png", "3.2.png", "3.3.png", "3.4.mov", "3.5.mov"],
+        "instructions": [
+            "Loop the thread back to the stitch on the right and up again forward an equal distance",
+            "Keep the distance between each of the individual stitches the same",
+            "Continue in a straight line"
+        ]
+    },
+    {
+        "title": "Step 4: Tie knot at the end",
+        "media": ["4.1.png", "4.2.png", "4.3.mov"],
+        "instructions": [
+            "Loop the thread through a small part of fabric",
+            "Tie a knot before pulling all the way",
+            "Pull on the knot and allow all thread to go through"
+        ]
+    }
+]
+
+
 
 @app.route('/')
 def home():
@@ -236,8 +274,15 @@ def hem_step(step):
 
 
 @app.route('/backstitch')
-def backstitch():
-   return render_template('home.html')   
+def backstitch_index():
+    return redirect(url_for('backstitch_step', step=0))
+
+@app.route('/backstitch/<int:step>')
+def backstitch_step(step):
+    return render_template("backstitch.html", step=backstitch_steps[step],
+                           prev_step=step - 1 if step > 0 else None,
+                           next_step=step + 1 if step < len(backstitch_steps) - 1 else None)
+
 
 @app.route('/slipstitch')
 def slipstitch():
