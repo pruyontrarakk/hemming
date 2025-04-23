@@ -24,6 +24,9 @@
     }
     .nav {
       margin-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .nav a {
       margin-right: 1rem;
@@ -32,6 +35,12 @@
       border: 1px solid #ccc;
       text-decoration: none;
       color: #000;
+      border-radius: 4px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .nav a:hover {
+      background-color: #ddd;
+      border-color: #bbb;
     }
   </style>
 
@@ -63,9 +72,13 @@
   <div class="nav">
     {% if prev_step is not none %}
       <a href="{{ url_for('backstitch_step', step=prev_step) }}">← Previous</a>
+    {% else %}
+      <span></span>
     {% endif %}
     {% if next_step is not none %}
       <a href="{{ url_for('backstitch_step', step=next_step) }}">Next →</a>
+    {% else %}
+      <a href="{{ url_for('slipstitch_index') }}">Learn Slipstitch →</a>
     {% endif %}
   </div>
 {% endblock %}

@@ -60,12 +60,15 @@
     </ul>
   {% endif %}
 
-  <div class="nav">
+    <div class="nav">
     {% if prev_step is not none %}
       <a href="{{ url_for('slipstitch_step', step=prev_step) }}">← Previous</a>
     {% endif %}
     {% if next_step is not none %}
       <a href="{{ url_for('slipstitch_step', step=next_step) }}">Next →</a>
+    {% else %}
+      <a href="{{ url_for('quiz') }}">Start Quiz</a>
     {% endif %}
   </div>
+
 {% endblock %}

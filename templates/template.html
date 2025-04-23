@@ -1,21 +1,72 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hemming Guide</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <style>
+    /* Base styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #fafafa;
+      color: #333;
+    }
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    /* Navigation bar */
+    nav {
+      background-color: #fff;
+      border-bottom: 1px solid #e2e2e2;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0.75rem 0;
+    }
+    nav a {
+      position: relative;
+      color: #555;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #000;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 2px;
+      width: 0;
+      background: #000;
+      transition: width 0.2s;
+    }
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+    nav a.active {
+      color: #000;
+    }
+  </style>
 </head>
 <body>
+  <nav>
+    <a href="{{ url_for('home') }}" class="{% if request.endpoint=='home' %}active{% endif %}">Home</a>
+    <a href="{{ url_for('hem_index') }}" class="{% if request.endpoint=='hem_step' %}active{% endif %}">Hemming</a>
+    <a href="{{ url_for('backstitch_index') }}" class="{% if request.endpoint=='backstitch_step' %}active{% endif %}">Backstitch</a>
+    <a href="{{ url_for('slipstitch_index') }}" class="{% if request.endpoint=='slipstitch_step' %}active{% endif %}">Slipstitch</a>
+    <a href="{{ url_for('quiz') }}" class="{% if request.endpoint=='quiz' %}active{% endif %}">Quiz</a>
+  </nav>
   <main>
-    <nav style="background: #f5f5f5; padding: 1rem; border-bottom: 1px solid #ccc;">
-        <a href="{{ url_for('home') }}" style="margin-right: 1rem;">Home</a>
-        <a href="{{ url_for('hem_index') }}" style="margin-right: 1rem;">Hemming</a>
-        <a href="{{ url_for('backstitch_index') }}" style="margin-right: 1rem;">Backstitch</a>
-        <a href="{{ url_for('slipstitch_index') }}" style="margin-right: 1rem;">Slipstitch</a>
-        <a href="{{ url_for('quiz') }}">Quiz</a>
-      </nav>
-
     {% block content %}{% endblock %}
   </main>
 </body>

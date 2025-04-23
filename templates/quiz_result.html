@@ -1,0 +1,34 @@
+{% extends "template.html" %}
+
+{% block content %}
+  <style>
+    .retake-button {
+      display: inline-block;
+      margin-top: 1rem;
+      margin-right: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      text-decoration: none;
+      color: #000;
+    }
+  </style>
+
+  <div class="p-4 container text-center">
+    <h1 class="mb-3">Your Score: {{ score }} / {{ total }}</h1>
+    <p class="fs-5">
+      {% if score == total %}
+        🎉 Perfect! You got all of them right.
+      {% else %}
+        👍 You can review and try again to improve your score.
+      {% endif %}
+    </p>
+    <a href="{{ url_for('hem_index') }}" class="retake-button">
+        Review More
+      </a>
+    <a href="{{ url_for('quiz') }}" class="retake-button">
+      Retake Quiz
+    </a>
+    
+  </div>
+{% endblock %}
