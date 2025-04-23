@@ -208,6 +208,107 @@ slipstitch_steps = [
     },
 ]
 
+quiz_questions = {
+    "1": {
+        "text": "What does a backstitch look like on the front side of the fabric?",
+        "choices": [
+            "A dashed line",
+            "A zigzag pattern",
+            "A solid, continuous line of stitching",
+            "Random loops and knots"
+        ],
+        "answer": 2,
+        "images": [],                # e.g. ["1.1.png","1.2.png"]
+        "explanation": {
+            "correct":   "The front of a backstitch should be a solid, continuous line of stitching.",
+            "incorrect": "Not quite—a backstitch front looks like a solid, continuous line."
+        },
+        "explanation_images": ["1.1-2.1.png"]     # e.g. ["1_exp.png"]
+    },
+    "2": {
+        "text": "Why is backstitch strong?",
+        "choices": [
+            "It uses thicker thread",
+            "It has overlapping stitches that form a solid line",
+            "It’s sewn with a machine",
+            "It uses double the fabric"
+        ],
+        "answer": 1,
+        "images": [],
+        "explanation": {
+            "correct":   "It’s the overlapping stitches that interlock and give strength.",
+            "incorrect": "The correct answer is: It has overlapping stitches that form a solid line. Since all of the stitches connect to the previous one, it creates a very strong structure. Backstitching does not require a sewing machine."
+        },
+        "explanation_images": ["1.1-2.1.png"]
+    },
+    "3": {
+        "text": "Which step of back stitching does this photo illustrate?",
+        "choices": [
+            "Preparing the thread and tying the knot",
+            "Creating the starting stitch to anchor the seam",
+            "Stitching backward into the previous hole to form a continuous line",
+            "Securing the seam with a final knot"
+        ],
+        "answer": 1,
+        "images": ["3.1.png"],
+        "explanation": {
+            "correct":   "This image shows the first stitch— threading the needle to the back on the right and bringing the needle to the front with an equal distance.",
+            "incorrect": "Not quite—the image shows the first initial anchoring stitch, not the final knot or the backward stitching."
+        },
+        "explanation_images": []
+    },
+    "4": {
+        "text": "Why is slip stitch preferred over backstitch?",
+        "choices": [
+            "It uses thicker thread",
+            "It has overlapping stitches that form a solid line",
+            "It’s nearly invisible from the outside",
+            "It uses double the fabric"
+        ],
+        "answer": 2,
+        "images": [],
+        "explanation": {
+            "correct":   "Exactly—slip stitch hides the thread almost entirely, making the hem nearly invisible.",
+            "incorrect": "The correct answer is: It’s nearly invisible from the outside. The stitches on the top are only a few threads wide."
+        },
+        "explanation_images": ["4.1.png"]
+    },
+    "5": {
+        "text": "Click where to insert the needle next for slip stitch.",
+        "choices": ["1", "2", "3"],
+        "answer": 2, # index of the hotspot
+        "images": ["5.1.png"],  
+        "hotspots": [
+            { "top": "50%", "left": "25%" },   # spot 0
+            { "top": "25%", "left": "40%" },   # spot 1
+            { "top": "55%", "left": "47%" }    # spot 2
+        ],
+        "explanation": {
+            "correct":   "It goes on top very close to the current stitch.",
+            "incorrect": "Actually you should insert at spot 3, close to the current stitch."
+        },
+        "explanation_images": []
+    },
+    "6": {
+        "text": "Click where to insert the needle next for backstitch after pulling the needle through.",
+        "choices": ["1", "2", "3"],
+        "answer": 0, # index of the hotspot
+        "images": ["6.1.png"],
+        "hotspots": [
+            { "top": "45%", "left": "35%" },   # spot 1
+            { "top": "45%", "left": "60%" },   # spot 2
+            { "top": "45%", "left": "75%" }    # spot 3
+        ],
+        "explanation": {
+            "correct":   "It goes back to the entry of the previous stitch.",
+            "incorrect": "After pulling through you return to spot 2, the entry of the previous stitch."
+        },
+        "explanation_images": []
+    }
+}
+
+
+quiz_responses = []
 
 def log_page_entry(page_name):
     with open("page_enter_log.txt", "a") as f:
