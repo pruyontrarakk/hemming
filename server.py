@@ -1,7 +1,10 @@
 # Skyla Cui sc5146
+# Patarada Yontrarak ppy2104
 
+import time
 from flask import Flask
 from flask import render_template, Response, request, jsonify, url_for, redirect
+
 
 app = Flask(__name__)
 
@@ -302,6 +305,12 @@ slipstitch_steps = [
 ]
 
 
+def log_page_entry(page_name):
+    with open("page_enter_log.txt", "a") as f:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        ip = request.remote_addr or "unknown"
+        f.write(f"{timestamp} - {ip} - {page_name}\n")
+
 
 
 @app.route('/')
@@ -315,6 +324,7 @@ def hem_index():
 
 @app.route('/hem/<int:step>')
 def hem_step(step):
+    log_page_entry(f"hem/{step}")
     return render_template("hem.html", step=hem_steps[step], step_num=step,
                            prev_step=step - 1 if step > 0 else None,
                            next_step=step + 1 if step < len(hem_steps) - 1 else None)
@@ -326,6 +336,7 @@ def backstitch_index():
 
 @app.route('/backstitch/<int:step>')
 def backstitch_step(step):
+    log_page_entry(f"backstitch/{step}")
     return render_template("backstitch.html", step=backstitch_steps[step],
                            prev_step=step - 1 if step > 0 else None,
                            next_step=step + 1 if step < len(backstitch_steps) - 1 else None)
@@ -335,7 +346,8 @@ def slipstitch_index():
     return redirect(url_for('slipstitch_step', step=0))
 
 @app.route('/slipstitch/<int:step>')
-def slipstitch_step(step):   # singular!
+def slipstitch_step(step):  
+    log_page_entry(f"slipstitch/{step}")
     return render_template("slipstitch.html", step=slipstitch_steps[step],
                            prev_step=step - 1 if step > 0 else None,
                            next_step=step + 1 if step < len(slipstitch_steps) - 1 else None)
