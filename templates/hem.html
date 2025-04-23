@@ -15,12 +15,17 @@
     }
     .images {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1rem;
       max-width: 50%;
     }
+
     .images img {
-      max-width: 100%;
+      width: 100%;
+      max-width: 300px;       
+      height: auto;
+      object-fit: contain;
       border: 1px solid #ccc;
     }
     .content {
