@@ -21,17 +21,17 @@
     }
     .images {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1rem;
     }
+
     .images img {
       width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-      transition: transform 0.2s;
-    }
-    .images img:hover {
-      transform: scale(1.02);
+      max-width: 300px;       
+      height: auto;
+      object-fit: contain;
+      border: 1px solid #ccc;
     }
     .content {
       line-height: 1.6;
