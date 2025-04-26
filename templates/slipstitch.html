@@ -2,73 +2,91 @@
 
 {% block content %}
   <style>
-    .step-title {
-      font-size: 1.6rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
+    /* ========== Carousel CSS ========== */
+    .carousel, .single-media {
+      position: relative;
+      max-width: 600px;
+      margin: 1rem auto 2rem;
+      overflow: hidden;
     }
-    .media-row {
+    .carousel-track {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      transition: transform 0.5s ease;
+      list-style: none;      
+      margin: 0; padding: 0;
     }
-    .media-row img,
-    .media-row video {
-      max-width: 30%;
-      border: 1px solid #ccc;
+    .carousel-slide {
+      min-width: 100%;
+      position: relative;
     }
-    ul {
-      list-style-type: circle;
-      padding-left: 1.2rem;
+    .carousel-slide.shadowed {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    .nav {
-      margin-top: 2rem;
+    .carousel-slide img,
+    .carousel-slide video,
+    .single-media img,
+    .single-media video {
+      width: 100%;
+      display: block;
     }
-    .nav a {
-      margin-right: 1rem;
-      padding: 0.5rem 1rem;
-      background-color: #eee;
-      border: 1px solid #ccc;
-      text-decoration: none;
-      color: #000;
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.75);
+      border: none;
+      font-size: 2rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      z-index: 1;
     }
+    .carousel-button.prev { left: 0.5rem; }
+    .carousel-button.next { right: 0.5rem; }
   </style>
 
-  <div class="step-title">{{ step.title }}</div>
+  <h2 class="step-title">{{ step_title }}</h2>
 
-  {% if step.media %}
-    <div class="media-row">
-      {% for item in step.media %}
-        {% if item.endswith(".png") or item.endswith(".jpg") or item.endswith(".jpeg") %}
-          <img src="{{ url_for('static', filename='media/slipstitch/' + item) }}" alt="step image">
-        {% elif item.endswith(".mov") or item.endswith(".mp4") %}
-          <video controls>
-            <source src="{{ url_for('static', filename='media/slipstitch/' + item) }}">
-            Your browser does not support the video tag.
-          </video>
-        {% endif %}
-      {% endfor %}
+  {% if media|length > 1 %}
+    <div class="carousel">
+      <button class="carousel-button prev">‹</button>
+      <ul class="carousel-track">
+        {% for m in media %}
+          <li class="carousel-slide{% if not loop.last %} shadowed{% endif %}">
+            {% if m.type == 'image' %}
+              <img src="{{ url_for('static', filename=m.src) }}" alt="{{ m.alt }}">
+            {% else %}
+              <video src="{{ url_for('static', filename=m.src) }}" controls></video>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+      <button class="carousel-button next">›</button>
+    </div>
+  {% else %}
+    {% set m = media[0] %}
+    <div class="single-media">
+      {% if m.type == 'image' %}
+        <img src="{{ url_for('static', filename=m.src) }}" alt="{{ m.alt }}">
+      {% else %}
+        <video src="{{ url_for('static', filename=m.src) }}" controls></video>
+      {% endif %}
     </div>
   {% endif %}
 
-  {% if step.instructions %}
-    <ul>
-      {% for line in step.instructions %}
-        <li>{{ line }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+  <ul>
+    {% for bullet in instructions %}
+      <li>{{ bullet }}</li>
+    {% endfor %}
+  </ul>
 
-    <div class="nav">
+  <div class="nav-buttons">
     {% if prev_step is not none %}
-      <a href="{{ url_for('slipstitch_step', step=prev_step) }}">← Previous</a>
+      <a href="{{ url_for('slipstitch_step', step=prev_step) }}" class="nav-button">← Previous</a>
     {% endif %}
     {% if next_step is not none %}
-      <a href="{{ url_for('slipstitch_step', step=next_step) }}">Next →</a>
+      <a href="{{ url_for('slipstitch_step', step=next_step) }}" class="nav-button">Next →</a>
     {% else %}
-      <a href="{{ url_for('quiz') }}">Start Quiz</a>
+      <a href="{{ url_for('quiz') }}" class="nav-button">Start Quiz</a>
     {% endif %}
   </div>
-
 {% endblock %}

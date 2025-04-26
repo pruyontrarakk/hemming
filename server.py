@@ -74,56 +74,56 @@ hem_steps = [
             "This step secures everything before stitching begins",
             "Now you’re ready to start sewing!"
         ]
-    },
-
-    {
-        "title": "Choosing your hemming stitch type (Backstitch vs Slip stitch)",
-        "images": [],
-        "html": """
-        <div style="display: flex; gap: 4rem;">
-            <div>
-                <strong>Why Backstitch</strong>
-                <ul>
-                    <li>Provides one of the strongest, most durable seams in hand sewing</li>
-                    <li>Ideal for structural seams (e.g. garment construction, bag straps, repairs)</li>
-                    <li>Cleaner and tighter, which are better for edges</li>
-                    <li>Machine-like finish without using a machine</li>
-                </ul>
-            </div>
-            <div>
-                <strong>Slip stitch</strong>
-                <ul>
-                    <li>Nearly invisible on the outside — perfect for clean, professional-looking hems</li>
-                    <li>Ideal for finishing hems on dress pants, skirts, formalwear, and curtains</li>
-                    <li>Great for delicate or lightweight fabrics</li>
-                    <li>Flexible and forgiving — allows the hem to move naturally without puckering</li>
-                </ul>
-            </div>
-        </div>
-        """
-    },
-    {
-        "title": "How to Identify (Backstitch vs Slip stitch)",
-        "images": ["8.1.png", "8.2.png", "8.3.png", "8.4.png"],
-        "html": """
-        <div style="display: flex; gap: 4rem;">
-            <div>
-                <strong>Backstitch</strong><br><br>
-                <em>Frontside:</em><br>
-                <p>A solid, continuous line of stitching that resembles machine sewing, with no gaps between stitches.</p>
-                <em>Backside:</em><br>
-                <p>A series of overlapping or slightly offset stitches, creating a somewhat dashed or broken line effect.</p>
-            </div>
-            <div>
-                <strong>Slip stitch</strong><br><br>
-                <em>Frontside:</em><br>
-                <p>Nearly invisible, with only small, evenly spaced out stitches.</p>
-                <em>Backside:</em><br>
-                <p>Thread travels hidden within the hem fold, creating a long horizontal stitch line.</p>
-            </div>
-        </div>
-        """
     }
+
+    # {
+    #     "title": "Choosing your hemming stitch type (Backstitch vs Slip stitch)",
+    #     "images": [],
+    #     "html": """
+    #     <div style="display: flex; gap: 4rem;">
+    #         <div>
+    #             <strong>Why Backstitch</strong>
+    #             <ul>
+    #                 <li>Provides one of the strongest, most durable seams in hand sewing</li>
+    #                 <li>Ideal for structural seams (e.g. garment construction, bag straps, repairs)</li>
+    #                 <li>Cleaner and tighter, which are better for edges</li>
+    #                 <li>Machine-like finish without using a machine</li>
+    #             </ul>
+    #         </div>
+    #         <div>
+    #             <strong>Slip stitch</strong>
+    #             <ul>
+    #                 <li>Nearly invisible on the outside — perfect for clean, professional-looking hems</li>
+    #                 <li>Ideal for finishing hems on dress pants, skirts, formalwear, and curtains</li>
+    #                 <li>Great for delicate or lightweight fabrics</li>
+    #                 <li>Flexible and forgiving — allows the hem to move naturally without puckering</li>
+    #             </ul>
+    #         </div>
+    #     </div>
+    #     """
+    # }
+    # {
+    #     "title": "How to Identify (Backstitch vs Slip stitch)",
+    #     "images": ["8.1.png", "8.2.png", "8.3.png", "8.4.png"],
+    #     "html": """
+    #     <div style="display: flex; gap: 4rem;">
+    #         <div>
+    #             <strong>Backstitch</strong><br><br>
+    #             <em>Frontside:</em><br>
+    #             <p>A solid, continuous line of stitching that resembles machine sewing, with no gaps between stitches.</p>
+    #             <em>Backside:</em><br>
+    #             <p>A series of overlapping or slightly offset stitches, creating a somewhat dashed or broken line effect.</p>
+    #         </div>
+    #         <div>
+    #             <strong>Slip stitch</strong><br><br>
+    #             <em>Frontside:</em><br>
+    #             <p>Nearly invisible, with only small, evenly spaced out stitches.</p>
+    #             <em>Backside:</em><br>
+    #             <p>Thread travels hidden within the hem fold, creating a long horizontal stitch line.</p>
+    #         </div>
+    #     </div>
+    #     """
+    # }
 ]
 
 backstitch_steps = [
@@ -327,36 +327,110 @@ def home():
 def hem_index():
     return redirect(url_for('hem_step', step=0))
 
+# @app.route('/hem/<int:step>')
+# def hem_step(step):
+#     log_page_entry(f"hem/{step}")
+#     return render_template("hem.html", step=hem_steps[step], step_num=step,
+#                            prev_step=step - 1 if step > 0 else None,
+#                            next_step=step + 1 if step < len(hem_steps) - 1 else None)
+
+
 @app.route('/hem/<int:step>')
 def hem_step(step):
-    log_page_entry(f"hem/{step}")
-    return render_template("hem.html", step=hem_steps[step], step_num=step,
-                           prev_step=step - 1 if step > 0 else None,
-                           next_step=step + 1 if step < len(hem_steps) - 1 else None)
+    if step == 6:
+        return render_template('hem_step6.html', prev_step=5, next_step=7)
+    elif step == 7:
+        return render_template('hem_step7.html', prev_step=6, next_step=None)
+    else:
+        step_data = hem_steps[step]
+        prev_step = step - 1 if step > 0 else None
+
+        if step == 5:
+            next_step = 6
+        elif step < 5:
+            next_step = step + 1
+        else:
+            next_step = None
+        
+        return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
+
 
 
 @app.route('/backstitch')
 def backstitch_index():
     return redirect(url_for('backstitch_step', step=0))
 
+# @app.route('/backstitch/<int:step>')
+# def backstitch_step(step):
+#     log_page_entry(f"backstitch/{step}")
+#     return render_template("backstitch.html", step=backstitch_steps[step],
+#                            prev_step=step - 1 if step > 0 else None,
+#                            next_step=step + 1 if step < len(backstitch_steps) - 1 else None)
+
 @app.route('/backstitch/<int:step>')
 def backstitch_step(step):
-    log_page_entry(f"backstitch/{step}")
-    return render_template("backstitch.html", step=backstitch_steps[step],
-                           prev_step=step - 1 if step > 0 else None,
-                           next_step=step + 1 if step < len(backstitch_steps) - 1 else None)
+    s = backstitch_steps[step]
+    media_objs = []
+    for fname in s['media']:
+        if fname.lower().endswith('.png'):
+            media_type = 'image'
+        elif fname.lower().endswith('.mov'):
+            media_type = 'video'
+        else:
+            raise ValueError(f"Unsupported media file type: {fname}")
+        media_objs.append({
+            'type': media_type,
+            'src': f"media/backstitch/{fname}",
+            'alt': s.get('alts', {}).get(fname, '')
+        })
+    return render_template(
+        "backstitch.html",
+        media=media_objs,
+        instructions=s['instructions'],
+        step_title=s['title'],
+        prev_step=step-1 if step > 0 else None,
+        next_step=step+1 if step < len(backstitch_steps) - 1 else None
+    )
+
+
 
 @app.route('/slipstitch')
 def slipstitch_index():
     return redirect(url_for('slipstitch_step', step=0))
 
-@app.route('/slipstitch/<int:step>')
-def slipstitch_step(step):  
-    log_page_entry(f"slipstitch/{step}")
-    return render_template("slipstitch.html", step=slipstitch_steps[step],
-                           prev_step=step - 1 if step > 0 else None,
-                           next_step=step + 1 if step < len(slipstitch_steps) - 1 else None)
+# @app.route('/slipstitch/<int:step>')
+# def slipstitch_step(step):  
+#     log_page_entry(f"slipstitch/{step}")
+#     return render_template("slipstitch.html", step=slipstitch_steps[step],
+#                            prev_step=step - 1 if step > 0 else None,
+#                            next_step=step + 1 if step < len(slipstitch_steps) - 1 else None)
 
+
+
+@app.route('/slipstitch/<int:step>')
+def slipstitch_step(step):
+    s = slipstitch_steps[step]
+    media_objs = []
+    for fname in s['media']:
+        if fname.lower().endswith('.png'):
+            media_type = 'image'
+        elif fname.lower().endswith('.mov'):
+            media_type = 'video'
+        else:
+            raise ValueError(f"Unsupported media file type: {fname}")
+        media_objs.append({
+            'type': media_type,
+            'src': f"media/slipstitch/{fname}",
+            'alt': s.get('alts', {}).get(fname, '')
+        })
+    return render_template(
+        "slipstitch.html",
+        media=media_objs,
+        instructions=s['instructions'],
+        step_title=s['title'],
+        prev_step=step-1 if step > 0 else None,
+        next_step=step+1 if step < len(slipstitch_steps) - 1 else None
+    )
 
 
 # … all your imports, hem_steps, backstitch_steps, slipstitch_steps, quiz_questions, quiz_responses …
