@@ -1,0 +1,115 @@
+{% extends "template.html" %}
+
+{% block content %}
+  <style>
+
+body { font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #222;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      flex-grow: 1;
+    }
+
+    .stitch-type {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+
+
+    .section img {
+      max-width: 350px;
+      width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+
+
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+<div class="page-container">
+
+  <h2>How to Identify (Backstitch vs Slip Stitch)</h2>
+
+  <div class="comparison-grid">
+
+    <div class="stitch-type">
+      <h3>Backstitch</h3>
+
+      <div class="section">
+        <div class="section-title">Frontside:</div>
+        <img src="{{ url_for('static', filename='media/hem/8.1.png') }}" alt="Backstitch Front">
+        <div class="description">
+          A solid, continuous line of stitching that resembles machine sewing, with no gaps between stitches.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Backside:</div>
+        <img src="{{ url_for('static', filename='media/hem/8.2.png') }}" alt="Backstitch Back">
+        <div class="description">
+          A series of overlapping or slightly offset stitches, creating a somewhat dashed or broken line effect.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="stitch-type">
+      <h3>Slip Stitch</h3>
+
+      <div class="section">
+        <div class="section-title">Frontside:</div>
+        <img src="{{ url_for('static', filename='media/hem/8.3.png') }}" alt="Slip Stitch Front">
+        <div class="description">
+          Nearly invisible, with only small, evenly spaced out stitches.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Backside:</div>
+        <img src="{{ url_for('static', filename='media/hem/8.4.png') }}" alt="Slip Stitch Back">
+        <div class="description">
+          Thread travels hidden within the hem fold, creating a long horizontal stitch line.
+        </div>
+      </div>
+
+    </div>
+
+  </div> <!-- /.comparison-grid -->
+
+  <div class="nav-buttons">
+    {% if prev_step is not none %}
+      <a href="{{ url_for('hem_step', step=prev_step) }}" class="nav-button">← Previous</a>
+    {% endif %}
+    
+    {% if next_step is not none %}
+      <a href="{{ url_for('hem_step', step=next_step) }}" class="nav-button">Next →</a>
+    {% else %}
+      <a href="{{ url_for('backstitch_index') }}" class="nav-button">Learn Backstitch →</a>
+    {% endif %}
+  </div>
+
+</div> <!-- /.page-container -->
+
+{% endblock %}

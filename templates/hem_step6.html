@@ -1,0 +1,87 @@
+{% extends "template.html" %}
+
+{% block content %}
+  <style>
+    .comparison-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1000px;
+      margin: 2rem auto;
+      align-items: start;
+    }
+
+    .comparison-section {
+      text-align: left;
+    }
+
+    .comparison-section h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .comparison-section ul {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+    }
+
+    .comparison-section li {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+
+  
+
+    @media (max-width: 768px) {
+      .comparison-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <h2>Choosing your Hemming Stitch Type (Backstitch vs Slip Stitch)</h2>
+
+  <div class="comparison-container">
+
+    <div class="comparison-section">
+      <h3>Why Backstitch</h3>
+      <ul>
+        <li>Provides one of the strongest, most durable seams in hand sewing</li>
+        <li>Ideal for structural seams (e.g. garment construction, bag straps, repairs)</li>
+        <li>Cleaner and tighter, which are better for edges</li>
+        <li>Machine-like finish without using a machine</li>
+      </ul>
+    </div>
+
+    <div class="comparison-section">
+      <h3>Slip Stitch</h3>
+      <ul>
+        <li>Nearly invisible on the outside — perfect for clean, professional-looking hems</li>
+        <li>Ideal for finishing hems on dress pants, skirts, formalwear, and curtains</li>
+        <li>Great for delicate or lightweight fabrics</li>
+        <li>Flexible and forgiving — allows the hem to move naturally without puckering</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="nav-buttons">
+    {% if prev_step is not none %}
+      <a href="{{ url_for('hem_step', step=prev_step) }}" class="nav-button">← Previous</a>
+    {% endif %}
+    {% if next_step is not none %}
+      <a href="{{ url_for('hem_step', step=next_step) }}" class="nav-button">Next →</a>
+    {% else %}
+      <a href="{{ url_for('backstitch_index') }}" class="nav-button">Learn Backstitch →</a>
+    {% endif %}
+  </div>
+
+{% endblock %}
