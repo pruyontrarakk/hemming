@@ -367,16 +367,56 @@ def hem_index():
 #             next_step = None
         
 #         return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
+# @app.route('/hem/<int:step>')
+# def hem_step(step):
+#     if step == 6:
+#         return render_template('hem_step6.html', prev_step=5, next_step=7)
+#     elif step == 7:
+#         return render_template('hem_step7.html', prev_step=6, next_step=None)
+#     step_data = hem_steps[step]
+#     prev_step = step - 1 if step > 0 else None
+#     next_step = step + 1 if step < len(hem_steps) - 1 else None
+#     return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
+
+
+
+
 @app.route('/hem/<int:step>')
 def hem_step(step):
+    # — Step 6: show the custom hem_step6.html page —
     if step == 6:
-        return render_template('hem_step6.html', prev_step=5, next_step=7)
+        return render_template(
+            'hem_step6.html',
+            prev_step=5,
+            next_step=7
+        )
+
+    # — Step 7: show the custom hem_step7.html page and then go to backstitch/1 —
     elif step == 7:
-        return render_template('hem_step7.html', prev_step=6, next_step=None)
+        return render_template(
+            'hem_step7.html',
+            prev_step=6,
+            next_step=None   # signals “go external” in template
+        )
+
+    # — Standard hemming steps 0–5 —
     step_data = hem_steps[step]
     prev_step = step - 1 if step > 0 else None
-    next_step = step + 1 if step < len(hem_steps) - 1 else None
-    return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
+
+    # if we’re on the last hem_steps index (step 5), route next to step 6
+    if step == len(hem_steps) - 1:
+        next_step = 6
+    else:
+        next_step = step + 1
+
+    return render_template(
+        'hem.html',
+        step=step_data,
+        prev_step=prev_step,
+        next_step=next_step
+    )
+
+
 
 @app.route('/backstitch')
 def backstitch_index():

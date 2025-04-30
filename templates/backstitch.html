@@ -1,69 +1,123 @@
 {% extends "template.html" %}
 
 {% block content %}
-  <style>
-    /* ========== Carousel and Single Media CSS ========== */
-    .carousel, .single-media {
-      position: relative;
-      max-width: 600px;
-      margin: 1rem auto 2rem;
-      overflow: hidden;
-    }
-    .carousel-track {
-      display: flex;
-      transition: transform 0.5s ease;
-      list-style: none;
-      margin: 0; padding: 0;
-    }
-    .carousel-slide {
-      min-width: 100%;
-      position: relative;
-    }
-    .carousel-slide.shadowed {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .carousel-slide img,
-    .carousel-slide video,
-    .single-media img,
-    .single-media video {
-      width: 100%;
-      display: block;
-    }
-    .carousel-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.75);
-      border: none;
-      font-size: 2rem;
-      padding: 0.25rem 0.5rem;
-      cursor: pointer;
-      z-index: 1;
-    }
-    .carousel-button.prev { left: 0.5rem; }
-    .carousel-button.next { right: 0.5rem; }
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    .nav-button {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background-color: var(--accent);
-      border: 1px solid var(--accent);
-      border-radius: 0.5rem;
-      text-decoration: none;
-      color: var(--white);
-      font-weight: bold;
-      font-size: 1.1rem;
-      transition: background-color 0.3s, border-color 0.3s;
-    }
-    .nav-button:hover {
-      background-color: var(--dark-grey);
-      border-color: var(--dark-grey);
-    }
-  </style>
+<style>
+  :root {
+    --base: #e9d8e4;
+    --accent: #92758f;
+    --light-grey: #bebebe;
+    --dark-grey: #333333;
+    --white: #ffffff;
+    --black: #000000;
+  }
+  body {
+    background-color: var(--white);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: var(--dark-grey);
+  }
+  h2.step-title {
+    font-family: Georgia, serif;
+    color: var(--accent);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .step-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  .media-group {
+    width: 100%;
+  }
+  /* Carousel styling */
+  .carousel, .single-media {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .carousel-slide {
+    min-width: 100%;
+    position: relative;
+  }
+  .carousel-slide.shadowed {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  .carousel-slide img,
+  .carousel-slide video,
+  .single-media img,
+  .single-media video {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    display: block;
+    border-radius: 4px;
+    margin: 0 auto;
+  }
+  .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--base);
+    border: none;
+    font-size: 2rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    z-index: 1;
+    color: var(--dark-grey);
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .carousel-button:hover {
+    background: var(--accent);
+    color: var(--white);
+  }
+  .carousel-button.prev { left: 0.5rem; }
+  .carousel-button.next { right: 0.5rem; }
+  .content-group {
+    padding: 1rem;
+  }
+  .content-group ul {
+    list-style: disc;
+    padding-left: 1.2rem;
+    margin: 0rem 0;     
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .content-group li {
+    margin-bottom: 0rem;
+  }
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  .nav-button {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    color: var(--white);
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-weight: 600;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  .nav-button:hover {
+    background-color: var(--dark-grey);
+    border-color: var(--dark-grey);
+  }
+</style>
+
 
   <h2 class="step-title">{{ step_title }}</h2>
 
@@ -93,12 +147,15 @@
       {% endif %}
     </div>
   {% endif %}
-
-  <ul>
-    {% for bullet in instructions %}
-      <li>{{ bullet }}</li>
-    {% endfor %}
-  </ul>
+<br>
+  <div class="content-group">
+    <ul>
+      {% for bullet in instructions %}
+        <li>{{ bullet }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 
   <div class="nav-buttons">
     <a href="{% if prev_step is not none %}{{ url_for('backstitch_step', step=prev_step) }}{% else %}{{ url_for('hem_step', step=7) }}{% endif %}" class="nav-button">← Previous</a>

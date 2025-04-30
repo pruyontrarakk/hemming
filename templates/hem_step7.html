@@ -46,6 +46,27 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; }
         grid-template-columns: 1fr;
       }
     }
+
+    .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  .nav-button {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    color: var(--white);
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-weight: 600;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  .nav-button:hover {
+    background-color: var(--dark-grey);
+    border-color: var(--dark-grey);
+  }
   </style>
 
 <div class="page-container">
