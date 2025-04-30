@@ -277,7 +277,7 @@ quiz_questions = {
         "images": ["5.1.png"],  
         "hotspots": [
             { "top": "50%", "left": "25%" },   # spot 0
-            { "top": "45%", "left": "40%" },   # spot 1
+            { "top": "35%", "left": "40%" },   # spot 1
             { "top": "55%", "left": "47%" }    # spot 2
         ],
         "explanation": {
@@ -292,13 +292,13 @@ quiz_questions = {
         "answer": 0, # index of the hotspot
         "images": ["6.1.png"],
         "hotspots": [
-            { "top": "50%", "left": "35%" },   # spot 1
-            { "top": "50%", "left": "60%" },   # spot 2
-            { "top": "50%", "left": "75%" }    # spot 3
+            { "top": "45%", "left": "35%" },   # spot 1
+            { "top": "45%", "left": "60%" },   # spot 2
+            { "top": "45%", "left": "75%" }    # spot 3
         ],
         "explanation": {
             "correct":   "It goes back to the entry of the previous stitch.",
-            "incorrect": "After pulling through you return to spot 2, the entry of the previous stitch."
+            "incorrect": "After pulling through you return to spot 1, the entry of the previous stitch."
         },
         "explanation_images": []
     },
