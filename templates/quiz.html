@@ -1,106 +1,138 @@
 {% extends "template.html" %}
+
 {% block content %}
   <style>
     :root {
-      --card-bg: #fff;
-      --page-bg: #f5f7fa;
-      --accent: #4a90e2;
-      --text-dark: #333;
-      --text-light: #666;
-      --btn-primary: #4a90e2;
-      --btn-hover: #357ab8;
-      --correct: #28a745;
-      --incorrect: #dc3545;
+      --base: #e9d8e4;
+      --accent: #92758f;
+      --light-grey: #bebebe;
+      --dark-grey: #333333;
+      --white: #ffffff;
     }
-    body { background: var(--page-bg); }
+    body {
+      background-color: var(--white);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      color: var(--dark-grey);
+    }
     .quiz-container {
       max-width: 600px;
       margin: 2rem auto;
-      background: var(--card-bg);
+      background-color: var(--white);
+      border: 1px solid var(--light-grey);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 2rem;
       position: relative;
     }
-    h2 {
+    .quiz-header {
+      padding: 1rem 0;
+    }
+    .quiz-header h2 {
+      font-family: Georgia, serif;
       color: var(--accent);
-      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      margin: 0 0 1rem;
+      text-align: center;
+    }
+    .quiz-header .quiz-question {
       font-size: 1.75rem;
+      margin: 1rem 0;
       text-align: center;
+      line-height: 1.4;
     }
-    .quiz-question {
-      font-size: 1.125rem;
-      margin-bottom: 1.5rem;
-      color: var(--text-dark);
-      text-align: center;
+    .choices {
+      margin: 2rem 0;
     }
-    .image-hotspot-container {
-      position: relative;
-      margin-bottom: 1.5rem;
-      text-align: center;
+    .form-check {
+      margin-bottom: 0.75rem;
+    }
+    .form-check-label {
+      margin-left: 0.5rem;
+      color: var(--dark-grey);
+    }
+    .order-list {
+      list-style: none;
+      margin: 1rem 0 2rem;
+      padding: 0;
+      border: 1px solid var(--light-grey);
+      border-radius: 4px;
+      background: var(--white);
+    }
+    .order-list li {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--light-grey);
+      cursor: move;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      color: var(--dark-grey);
+    }
+    .order-list li:last-child {
+      border-bottom: none;
+    }
+    .btn-submit {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      margin: 2rem 0;
+      background-color: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-submit:disabled {
+      background-color: var(--light-grey);
+      cursor: not-allowed;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background-color: var(--dark-grey);
     }
     .image-hotspot-container img {
       max-width: 100%;
       border-radius: 4px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
     }
     .hotspot {
       position: absolute;
       width: 2.4rem;
       height: 2.4rem;
       transform: translate(-50%, -50%);
-      background: #fff;
-      border: 2px solid var(--text-dark);
+      background: var(--white);
+      border: 2px solid var(--accent);
       border-radius: 50%;
       font-weight: bold;
-      color: var(--text-dark);
+      color: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: background 0.2s, border-color 0.2s;
     }
-    .hotspot.selected { background: var(--btn-primary); border-color: var(--btn-primary); color: #fff; }
-    .hotspot.correct { background: var(--correct); border-color: var(--correct); color: #fff; }
-    .hotspot.incorrect { background: var(--incorrect); border-color: var(--incorrect); color: #fff; }
-    .choices { margin-bottom: 1rem; }
-    .form-check-label { margin-left: 0.5rem; color: var(--text-dark); }
-
-    .btn-submit {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--btn-primary);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-submit:disabled { background: #a0c4f7; cursor: not-allowed; }
-    .btn-submit:hover:not(:disabled) { background: var(--btn-hover); }
-
+    .hotspot:hover { opacity: 0.5; }
+    .hotspot.selected { background: var(--accent); border-color: var(--accent); color: var(--white); }
+    .hotspot.correct { background: #28a745; border-color: #28a745; color: var(--white); }
+    .hotspot.incorrect { background: #dc3545; border-color: #dc3545; color: var(--white); }
     .feedback {
       margin-top: 1.5rem;
       padding: 1rem;
       border-left: 4px solid;
       border-radius: 4px;
-      background: #f9f9f9;
+      background-color: var(--white);
     }
-    .feedback.correct { border-color: var(--correct); }
-    .feedback.incorrect { border-color: var(--incorrect); }
+    .feedback.correct { border-color: #28a745; }
+    .feedback.incorrect { border-color: #dc3545; }
     .feedback strong { display: block; margin-bottom: 0.5rem; }
-
     .btn-next {
       position: absolute;
       bottom: 1.5rem;
       right: 1.5rem;
       width: 3rem;
       height: 3rem;
-      background: var(--btn-primary);
-      color: #fff;
+      background-color: var(--accent);
+      color: var(--white);
       border: none;
       border-radius: 50%;
       font-size: 1.5rem;
@@ -108,51 +140,113 @@
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
+      transition: background-color 0.2s, transform 0.2s;
     }
-    .btn-next:hover { background: var(--btn-hover); transform: translateY(-2px); }
+    .btn-next:hover { background-color: var(--dark-grey); transform: translateY(-2px); }
   </style>
 
   <div class="quiz-container">
-    <h2>Question {{ qid }} / {{ total }}</h2>
-    <p class="quiz-question">{{ question }}</p>
+    <div class="quiz-header">
+      <h2>Question {{ qid }} / {{ total }}</h2>
+      <p class="quiz-question">{{ question }}</p>
+    </div>
 
     <form method="post" id="quiz-form">
-      {% if images and hotspots %}
-        <div class="image-hotspot-container">
-          <img src="{{ url_for('static', filename='media/quiz/' + images[0]) }}" alt="Question image">
-          {% for spot in hotspots %}
-            {% set idx = loop.index0 %}
-            <input type="radio" name="choice" id="spot{{ idx }}" value="{{ idx }}" style="display:none"
-                   {% if show_feedback %} disabled {% endif %} {% if show_feedback and idx == selected %} checked {% endif %}>
-            <label for="spot{{ idx }}" class="hotspot
-                   {% if not show_feedback and idx == selected %} selected{% endif %}
-                   {% if show_feedback and idx == answer %} correct{% elif show_feedback and idx == selected and not correct %} incorrect{% endif %}"
-                   style="top: {{ spot.top }}; left: {{ spot.left }};">{{ loop.index }}</label>
-          {% endfor %}
-        </div>
-      {% elif images %}
-        <img src="{{ url_for('static', filename='media/quiz/' + images[0]) }}" style="width:100%; border-radius:4px; margin-bottom:1rem;" alt="Question image">
-      {% endif %}
+      {% if type == 'order' %}
+        {% if not show_feedback %}
+          <ul id="order-list" class="order-list">
+            {% for item in order_items %}
+              <li data-text="{{ item }}">{{ item }}</li>
+            {% endfor %}
+          </ul>
+          <input type="hidden" name="order_sequence" id="order_sequence" value="[]">
+          <button type="submit" class="btn-submit" id="submit-btn">Submit</button>
+        {% else %}
+          <ul class="order-list">
+            {% for item in user_order %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          <div class="feedback {{ 'correct' if correct else 'incorrect' }}">
+            <strong>{{ 'Correct!' if correct else 'Incorrect!' }}</strong>
+            <p>{{ feedback }}</p>
+          </div>
+          {% if next_qid %}
+            <a href="{{ url_for('quiz', qid=next_qid) }}" class="btn-next">→</a>
+          {% else %}
+            <a href="{{ url_for('quiz_result') }}" class="btn-next">✓</a>
+          {% endif %}
+        {% endif %}
 
-      {% if not hotspots %}
-        <div class="choices">
-          {% for choice in choices %}
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="choice" id="opt{{ loop.index0 }}" value="{{ loop.index0 }}"
-                     {% if show_feedback %} disabled {% endif %} {% if show_feedback and loop.index0 == selected %} checked {% endif %}>
-              <label class="form-check-label" for="opt{{ loop.index0 }}">{{ choice }}</label>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+      {% else %}
+        {% if images and hotspots %}
+          <div class="image-hotspot-container">
+            <img src="{{ url_for('static', filename='media/quiz/' + images[0]) }}" alt="Question image">
+            {% for spot in hotspots %}
+              {% set idx = loop.index0 %}
+              <input type="radio" name="choice" id="spot{{ idx }}" value="{{ idx }}" style="display:none"
+                     {% if show_feedback %}
+          <ul class="order-list">
+            {% for item in user_order %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul> disabled {% endif %} {% if show_feedback and idx == selected %} checked {% endif %}>
+              <label for="spot{{ idx }}" class="hotspot
+                     {% if not show_feedback and idx == selected %} selected{% endif %}
+                     {% if show_feedback and idx == answer %} correct{% elif show_feedback and idx == selected and not correct %} incorrect{% endif %}"
+                     style="top: {{ spot.top }}; left: {{ spot.left }};">{{ loop.index }}</label>
+            {% endfor %}
+          </div>
+        {% elif images %}
+          <img src="{{ url_for('static', filename='media/quiz/' + images[0]) }}" style="width:100%; border-radius:4px; margin-bottom:1rem;" alt="Question image">
+        {% endif %}
 
-      {% if not show_feedback %}
-        <button type="submit" class="btn-submit" id="submit-btn" disabled>Submit</button>
+        {% if not hotspots %}
+          <div class="choices">
+            {% for choice in choices %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="choice" id="opt{{ loop.index0 }}" value="{{ loop.index0 }}"
+                       {% if show_feedback %} disabled {% endif %} {% if show_feedback and loop.index0 == selected %} checked {% endif %}>
+                <label class="form-check-label" for="opt{{ loop.index0 }}">{{ choice }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if not show_feedback %}
+          <button type="submit" class="btn-submit" id="submit-btn" disabled>Submit</button>
+        {% else %}
+          <div class="feedback {{ 'correct' if correct else 'incorrect' }}">
+            <strong>{{ 'Correct!' if correct else 'Incorrect!' }}</strong>
+            <p>{{ feedback }}</p>
+            {% if explanation_images %}
+              {% for img in explanation_images %}
+                <img src="{{ url_for('static', filename='media/quiz/' + img) }}" style="width:100%; border-radius:4px; margin-top:0.75rem;" alt="Explanation image">
+              {% endfor %}
+            {% endif %}
+          </div>
+          {% if next_qid %}
+            <a href="{{ url_for('quiz', qid=next_qid) }}" class="btn-next">→</a>
+          {% else %}
+            <a href="{{ url_for('quiz_result') }}" class="btn-next">✓</a>
+          {% endif %}
+        {% endif %}
       {% endif %}
     </form>
 
-    {% if not show_feedback %}
+    {% if type == 'order' and not show_feedback %}
+      <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+      <script>
+        const sortable = Sortable.create(document.getElementById('order-list'));
+        document.getElementById('quiz-form').addEventListener('submit', () => {
+          const items = Array.from(document.querySelectorAll('#order-list li'))
+                             .map(li => li.dataset.text);
+          document.getElementById('order_sequence').value = JSON.stringify(items);
+        });
+      </script>
+    {% endif %}
+
+    {% if type != 'order' and not show_feedback %}
       <script>
         const inputs = document.querySelectorAll('input[name="choice"]');
         const submitBtn = document.getElementById('submit-btn');
@@ -164,23 +258,6 @@
           if(lab) lab.classList.add('selected');
         }));
       </script>
-    {% endif %}
-
-    {% if show_feedback %}
-      <div class="feedback {{ 'correct' if correct else 'incorrect' }}">
-        <strong>{{ 'Correct!' if correct else 'Incorrect!' }}</strong>
-        <p>{{ feedback }}</p>
-        {% if explanation_images %}
-          {% for img in explanation_images %}
-            <img src="{{ url_for('static', filename='media/quiz/' + img) }}" style="width:100%; border-radius:4px; margin-top:0.75rem;" alt="Explanation image">
-          {% endfor %}
-        {% endif %}
-      </div>
-      {% if next_qid %}
-        <a href="{{ url_for('quiz', qid=next_qid) }}" class="btn-next">→</a>
-      {% else %}
-        <a href="{{ url_for('quiz_result') }}" class="btn-next">✓</a>
-      {% endif %}
     {% endif %}
   </div>
 {% endblock %}

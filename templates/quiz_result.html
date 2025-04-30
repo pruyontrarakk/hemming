@@ -2,33 +2,86 @@
 
 {% block content %}
   <style>
-    .retake-button {
+    :root {
+      --base: #e9d8e4;
+      --accent: #92758f;
+      --light-grey: #bebebe;
+      --dark-grey: #333333;
+      --white: #ffffff;
+      --black: #000000;
+    }
+    body {
+      background-color: var(--white);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      color: var(--dark-grey);
+    }
+    .result-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: var(--white);
+      border: 1px solid var(--light-grey);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 2rem;
+      text-align: center;
+    }
+    .result-container h2 {
+      font-family: Georgia, serif;
+      color: var(--accent);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .result-emoji {
+      font-size: 2.5rem;
+      margin: 1rem 0;
+      margin-bottom: 3rem;
+      display: block;
+    }
+    .result-container p {
+      font-size: 1.125rem;
+      margin-bottom: 5rem;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .action-button {
       display: inline-block;
-      margin-top: 1rem;
-      margin-right: 1rem;
-      padding: 0.5rem 1rem;
-      background-color: #eee;
-      border: 1px solid #ccc;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--white);
       text-decoration: none;
-      color: #000;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .action-button:hover {
+      background-color: var(--dark-grey);
+      border-color: var(--dark-grey);
     }
   </style>
 
-  <div class="p-4 container text-center">
-    <h1 class="mb-3">Your Score: {{ score }} / {{ total }}</h1>
-    <p class="fs-5">
+  <div class="result-container">
+    <h2>Your Score: {{ score }} / {{ total }}</h2>
+    <span class="result-emoji">
       {% if score == total %}
-        🎉 Perfect! You got all of them right.
+        🎉
       {% else %}
-        👍 You can review and try again to improve your score.
+        👍
+      {% endif %}
+    </span>
+    <p>
+      {% if score == total %}
+        Perfect! You got all of them right.
+      {% else %}
+        You can review and try again to improve your score.
       {% endif %}
     </p>
-    <a href="{{ url_for('hem_index') }}" class="retake-button">
-        Review More
-      </a>
-    <a href="{{ url_for('quiz') }}" class="retake-button">
-      Retake Quiz
-    </a>
-    
+    <div class="action-buttons">
+      <a href="{{ url_for('hem_index') }}" class="action-button">Review More</a>
+      <a href="{{ url_for('quiz') }}" class="action-button">Retake Quiz</a>
+    </div>
   </div>
 {% endblock %}

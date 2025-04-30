@@ -6,38 +6,49 @@
   <title>Hemming Guide</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
   <style>
+    /* —— Color variables —— */
+    :root {
+      --base-bg: #e9d8e4;
+      --accent: #92758f;
+      --light-grey: #bebebe;
+      --dark-grey: #333333;
+      --white: #ffffff;
+    }
+
     /* Base styles */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #fafafa;
-      color: #333;
+      background-color: var(--white);
+      color: var(--dark-grey);
     }
     main {
       max-width: 960px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
-    /* Navigation bar */
+
+    /* —— Navbar —— */
     nav {
-      background-color: #fff;
-      border-bottom: 1px solid #e2e2e2;
+      background-color: var(--base-bg);
+      border-bottom: 1px solid var(--light-grey);
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       justify-content: center;
       gap: 2rem;
       padding: 0.75rem 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
     }
     nav a {
       position: relative;
-      color: #555;
+      color: var(--dark-grey);
       text-decoration: none;
       font-weight: 500;
       padding: 0.5rem;
       transition: color 0.2s;
     }
     nav a:hover {
-      color: #000;
+      color: var(--accent);
     }
     nav a::after {
       content: '';
@@ -46,7 +57,7 @@
       bottom: 0;
       height: 2px;
       width: 0;
-      background: #000;
+      background-color: var(--accent);
       transition: width 0.2s;
     }
     nav a:hover::after,
@@ -54,17 +65,27 @@
       width: 100%;
     }
     nav a.active {
-      color: #000;
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
   <nav>
-    <a href="{{ url_for('home') }}" class="{% if request.endpoint=='home' %}active{% endif %}">Home</a>
-    <a href="{{ url_for('hem_index') }}" class="{% if request.endpoint=='hem_step' %}active{% endif %}">Hemming</a>
-    <a href="{{ url_for('backstitch_index') }}" class="{% if request.endpoint=='backstitch_step' %}active{% endif %}">Backstitch</a>
-    <a href="{{ url_for('slipstitch_index') }}" class="{% if request.endpoint=='slipstitch_step' %}active{% endif %}">Slipstitch</a>
-    <a href="{{ url_for('quiz') }}" class="{% if request.endpoint=='quiz' %}active{% endif %}">Quiz</a>
+    <a href="{{ url_for('home') }}" class="{% if request.endpoint=='home' %}active{% endif %}">
+      Home
+    </a>
+    <a href="{{ url_for('hem_index') }}" class="{% if request.endpoint=='hem_step' %}active{% endif %}">
+      Hemming
+    </a>
+    <a href="{{ url_for('backstitch_index') }}" class="{% if request.endpoint=='backstitch_step' %}active{% endif %}">
+      Backstitch
+    </a>
+    <a href="{{ url_for('slipstitch_index') }}" class="{% if request.endpoint=='slipstitch_step' %}active{% endif %}">
+      Slipstitch
+    </a>
+    <a href="{{ url_for('quiz') }}" class="{% if request.endpoint=='quiz' %}active{% endif %}">
+      Quiz
+    </a>
   </nav>
   <main>
     {% block content %}{% endblock %}

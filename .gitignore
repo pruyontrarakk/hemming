@@ -1,0 +1,9 @@
+# macOS system files
+.DS_Store
+
+# custom log file
+page_enter_log.txt
+
+# DS_Store files in static assets
+static/.DS_Store
+static/media/.DS_Store

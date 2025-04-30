@@ -2,8 +2,8 @@
 # Patarada Yontrarak ppy2104
 
 import time
-from flask import Flask
-from flask import render_template, Response, request, jsonify, url_for, redirect
+import json
+from flask import Flask, render_template, request, redirect, url_for
 
 
 app = Flask(__name__)
@@ -12,14 +12,11 @@ hem_steps = [
     {
         "title": "Introduction to Hemming",
         "images": ["1.1.png", "1.2.png"],
-        "html": """
-        <p><strong>What is hemming?</strong><br>
-        A technique to finish the edge of fabric to prevent fraying and give a clean look.</p>
-        <p><strong>When do you hem?</strong><br>
-        Shortening garments, finishing handmade items, adjusting curtains, etc.</p>
-        <p><strong>Why hand stitch your hem?</strong><br>
-        More control, invisible finishes, great for delicate or thick fabrics.</p>
-        """
+        "flashcards": [
+            {"question": "What is hemming?", "answer": "A technique to finish the edge of fabric to prevent fraying and give a clean look."},
+            {"question": "When do you hem?", "answer": "Shortening garments, finishing handmade items, adjusting curtains, etc."},
+            {"question": "Why hand stitch your hem?", "answer": "More control, invisible finishes, great for delicate or thick fabrics."}
+        ]
     },
     {
         "title": "Tools You'll Need to Hem",
@@ -280,7 +277,7 @@ quiz_questions = {
         "images": ["5.1.png"],  
         "hotspots": [
             { "top": "50%", "left": "25%" },   # spot 0
-            { "top": "25%", "left": "40%" },   # spot 1
+            { "top": "45%", "left": "40%" },   # spot 1
             { "top": "55%", "left": "47%" }    # spot 2
         ],
         "explanation": {
@@ -295,15 +292,35 @@ quiz_questions = {
         "answer": 0, # index of the hotspot
         "images": ["6.1.png"],
         "hotspots": [
-            { "top": "45%", "left": "35%" },   # spot 1
-            { "top": "45%", "left": "60%" },   # spot 2
-            { "top": "45%", "left": "75%" }    # spot 3
+            { "top": "50%", "left": "35%" },   # spot 1
+            { "top": "50%", "left": "60%" },   # spot 2
+            { "top": "50%", "left": "75%" }    # spot 3
         ],
         "explanation": {
             "correct":   "It goes back to the entry of the previous stitch.",
             "incorrect": "After pulling through you return to spot 2, the entry of the previous stitch."
         },
         "explanation_images": []
+    },
+    "7": {
+        "text": "Drag the steps into the correct order:",
+        "type": "order",
+        "order_items": [
+            "Mark your hemline with chalk or pins",
+            "Fold up the raw edge once (¼”–½”) and press",
+            "Fold again to desired hem depth and press",
+            "Pin in place to secure"
+        ],
+        "correct_order": [
+            "Mark your hemline with chalk or pins",
+            "Fold up the raw edge once (¼”–½”) and press",
+            "Fold again to desired hem depth and press",
+            "Pin in place to secure"
+        ],
+        "explanation": {
+            "correct": "Exactly! You’ve put them in the right sequence.",
+            "incorrect": "Not quite — the correct order is mark your hemline, fold up the raw edge, fold again, then pin in place."
+        }
     }
 }
 
@@ -316,12 +333,9 @@ def log_page_entry(page_name):
         ip = request.remote_addr or "unknown"
         f.write(f"{timestamp} - {ip} - {page_name}\n")
 
-
-
 @app.route('/')
 def home():
    return render_template('home.html')   
-
 
 @app.route('/hem')
 def hem_index():
@@ -335,26 +349,34 @@ def hem_index():
 #                            next_step=step + 1 if step < len(hem_steps) - 1 else None)
 
 
+# @app.route('/hem/<int:step>')
+# def hem_step(step):
+#     if step == 6:
+#         return render_template('hem_step6.html', prev_step=5, next_step=7)
+#     elif step == 7:
+#         return render_template('hem_step7.html', prev_step=6, next_step=None)
+#     else:
+#         step_data = hem_steps[step]
+#         prev_step = step - 1 if step > 0 else None
+
+#         if step == 5:
+#             next_step = 6
+#         elif step < 5:
+#             next_step = step + 1
+#         else:
+#             next_step = None
+        
+#         return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
 @app.route('/hem/<int:step>')
 def hem_step(step):
     if step == 6:
         return render_template('hem_step6.html', prev_step=5, next_step=7)
     elif step == 7:
         return render_template('hem_step7.html', prev_step=6, next_step=None)
-    else:
-        step_data = hem_steps[step]
-        prev_step = step - 1 if step > 0 else None
-
-        if step == 5:
-            next_step = 6
-        elif step < 5:
-            next_step = step + 1
-        else:
-            next_step = None
-        
-        return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
-
-
+    step_data = hem_steps[step]
+    prev_step = step - 1 if step > 0 else None
+    next_step = step + 1 if step < len(hem_steps) - 1 else None
+    return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
 
 @app.route('/backstitch')
 def backstitch_index():
@@ -436,60 +458,81 @@ def slipstitch_step(step):
 # … all your imports, hem_steps, backstitch_steps, slipstitch_steps, quiz_questions, quiz_responses …
 
 @app.route('/quiz', defaults={'qid': None}, methods=['GET','POST'], endpoint='quiz')
-@app.route('/quiz/<int:qid>',            methods=['GET','POST'])
+@app.route('/quiz/<int:qid>', methods=['GET','POST'])
 def quiz(qid):
     total = len(quiz_questions)
 
-    # ---- 1) entry point: /quiz  ----
-    if qid is None:
+    # Redirect to first question if qid is missing or out of range
+    if qid is None or qid < 1 or qid > total:
         quiz_responses.clear()
         return redirect(url_for('quiz', qid=1))
 
-    # ---- 2) out of range → restart ----
-    if qid < 1 or qid > total:
-        return redirect(url_for('quiz', qid=1))
-
-    # grab question
     q = quiz_questions[str(qid)]
 
-    # ---- 3) on submit, render feedback  ----
+    # Handle form submission
     if request.method == 'POST':
-        sel     = int(request.form['choice'])
-        correct = (sel == q['answer'])
-        quiz_responses.append({ 'qid': qid, 'selected': sel, 'correct': correct })
+        # Ordering question
+        if q.get('type') == 'order':
+            order_seq = request.form.get('order_sequence', '[]')
+            try:
+                user_order = json.loads(order_seq)
+            except json.JSONDecodeError:
+                user_order = []
+            correct = (user_order == q['correct_order'])
+            quiz_responses.append({'qid': qid, 'correct': correct})
 
-        feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
-        next_qid = qid + 1 if qid < total else None
+            feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
+            next_qid = qid + 1 if qid < total else None
 
-        return render_template(
-            'quiz.html',
-            qid=qid,
-            total=total,
-            question=q['text'],
-            choices=q['choices'],
-            show_feedback=True,
-            correct=correct,
-            feedback=feedback,
-            images=q['images'],
-            explanation_images=q.get('explanation_images', []),
-            hotspots=q.get('hotspots', []),
-            next_qid=next_qid,
-            selected=sel,
-            answer=q['answer']
-        )
+            return render_template('quiz.html',
+                                   qid=qid, total=total,
+                                   question=q['text'],
+                                   type='order',
+                                   show_feedback=True,
+                                   correct=correct,
+                                   feedback=feedback,
+                                   user_order=user_order,
+                                   next_qid=next_qid)
 
-    # ---- 4) initial GET: render question form  ----
-    return render_template(
-        'quiz.html',
-        qid=qid,
-        total=total,
-        question=q['text'],
-        choices=q['choices'],
-        show_feedback=False,
-        images=q['images'],
-        hotspots=q.get('hotspots', []),
-        answer=q['answer']
-    )
+        # Multiple-choice / hotspot questions
+        else:
+            sel = int(request.form['choice'])
+            correct = (sel == q['answer'])
+            quiz_responses.append({'qid': qid, 'selected': sel, 'correct': correct})
+
+            feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
+            next_qid = qid + 1 if qid < total else None
+
+            return render_template('quiz.html',
+                                   qid=qid, total=total,
+                                   question=q['text'],
+                                   choices=q['choices'],
+                                   show_feedback=True,
+                                   correct=correct,
+                                   feedback=feedback,
+                                   images=q['images'],
+                                   hotspots=q.get('hotspots', []),
+                                   next_qid=next_qid,
+                                   selected=sel,
+                                   answer=q['answer'])
+
+    # Initial GET: render the question
+    else:
+        if q.get('type') == 'order':
+            return render_template('quiz.html',
+                                   qid=qid, total=total,
+                                   question=q['text'],
+                                   type='order',
+                                   order_items=q['order_items'])
+        else:
+            return render_template('quiz.html',
+                                   qid=qid, total=total,
+                                   question=q['text'],
+                                   choices=q['choices'],
+                                   show_feedback=False,
+                                   images=q['images'],
+                                   hotspots=q.get('hotspots', []),
+                                   answer=q['answer'])
 
 
 

@@ -2,69 +2,96 @@
 
 {% block content %}
   <style>
-    /* Container styling */
+    /* —— Color variables —— */
+    :root {
+      --base-bg: #e9d8e4;
+      --accent: #92758f;
+      --light-grey: #bebebe;
+      --dark-grey: #333333;
+      --white: #ffffff;
+    }
+
+    /* Group 1: Hero container */
     #homediv {
       max-width: 480px;
       margin: 2rem auto;
       padding: 2rem;
-      background-color: #fafafa;
+      background-color: var(--white); /* switched to light grey */
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       text-align: center;
     }
-    /* Title styling */
+
+    /* Group 1a: Title */
     #hometitle {
+      font-family: Georgia, serif;
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
-      color: #333;
+      color: var(--dark-grey);
     }
-    /* Subtitle styling */
+
+    /* Group 1b: Subtitle */
     #homesubtitle {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       font-size: 1rem;
-      color: #666;
-      margin-bottom: 1.5rem;
       font-style: italic;
+      margin-bottom: 1.5rem;
+      color: var(--dark-grey);
     }
-    /* Cover image */
+
+    /* Group 2: Feature image */
     #homepic {
       max-width: 100%;
       height: auto;
       border-radius: 4px;
       margin-bottom: 1.5rem;
-      border: 1px solid #ddd;
+      border: 1px solid var(--light-grey);
     }
-    /* Divider */
+
+    /* Group 3: Divider */
     #linehome {
       border: none;
       height: 1px;
-      background: #e0e0e0;
+      background: var(--light-grey);
       margin: 1.5rem 0;
     }
-    /* Button styling */
+
+    /* Group 4: Call-to-action button */
     .retake-button {
       display: inline-block;
       margin-top: 1rem;
       padding: 0.75rem 1.5rem;
-      background-color: #eee;
-      border: 1px solid #ccc;
+      background-color: var(--accent);
+      border: 1px solid var(--accent);
       border-radius: 4px;
       text-decoration: none;
-      color: #333;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       font-weight: 600;
+      color: var(--white);
       transition: background-color 0.2s, border-color 0.2s;
     }
     .retake-button:hover {
-      background-color: #ddd;
-      border-color: #bbb;
+      background-color: var(--dark-grey);
+      border-color: var(--dark-grey);
+      color: var(--white);
     }
   </style>
 
   <div id="homediv">
+    <!-- Group 1: Title & subtitle -->
     <h1 id="hometitle">HOW TO HEM</h1>
     <div id="homesubtitle">a beginner’s guide to hemming your own clothes</div>
-    <img id="homepic" src="{{ url_for('static', filename='media/cover.png') }}" alt="cover photo">
+
+    <!-- Group 2: Hero image -->
+    <img id="homepic"
+         src="{{ url_for('static', filename='media/cover.png') }}"
+         alt="cover photo">
+
+    <!-- Group 3: Divider -->
     <hr id="linehome">
+
+    <!-- Group 4: Start button -->
     <a href="{{ url_for('hem_index') }}" class="retake-button">Start!</a>
   </div>
 {% endblock %}
