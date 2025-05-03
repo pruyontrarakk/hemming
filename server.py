@@ -306,10 +306,10 @@ quiz_questions = {
         "text": "Drag the steps into the correct order:",
         "type": "order",
         "order_items": [
-            "Mark your hemline with chalk or pins",
-            "Fold up the raw edge once (¼”–½”) and press",
             "Fold again to desired hem depth and press",
-            "Pin in place to secure"
+            "Mark your hemline with chalk or pins",
+            "Pin in place to secure",
+            "Fold up the raw edge once (¼”–½”) and press"
         ],
         "correct_order": [
             "Mark your hemline with chalk or pins",
@@ -333,101 +333,153 @@ def log_page_entry(page_name):
         ip = request.remote_addr or "unknown"
         f.write(f"{timestamp} - {ip} - {page_name}\n")
 
+# @app.route('/')
+# def home():
+#    return render_template('home.html')  
+
+
+@app.context_processor
+def inject_section_data():
+    return dict(
+        # Home has 1 “step”; Hem has len(hem_steps)+2; Backstitch & Slipstitch each have len(...); Quiz has len(quiz_questions)
+        section_steps=[
+            1,
+            len(hem_steps) + 2,
+            len(backstitch_steps),
+            len(slipstitch_steps),
+            len(quiz_questions)
+        ]
+    )
+
 @app.route('/')
+@app.route('/home')
 def home():
-   return render_template('home.html')   
+    # show home; mark Home segment = 100%
+    return render_template('home.html',
+                           step_number=1,
+                           total_steps=1)
+
+
+# @app.route('/hem')
+# def hem_index():
+#     return redirect(url_for('hem_step', step=0))
+
+
+# @app.route('/hem/<int:step>')
+# def hem_step(step):
+#     # — Step 6: show the custom hem_step6.html page —
+#     if step == 6:
+#         return render_template(
+#             'hem_step6.html',
+#             prev_step=5,
+#             next_step=7
+#         )
+
+#     # — Step 7: show the custom hem_step7.html page and then go to backstitch/1 —
+#     elif step == 7:
+#         return render_template(
+#             'hem_step7.html',
+#             prev_step=6,
+#             next_step=None   # signals “go external” in template
+#         )
+
+#     # — Standard hemming steps 0–5 —
+#     step_data = hem_steps[step]
+#     prev_step = step - 1 if step > 0 else None
+
+#     # if we’re on the last hem_steps index (step 5), route next to step 6
+#     if step == len(hem_steps) - 1:
+#         next_step = 6
+#     else:
+#         next_step = step + 1
+
+#     return render_template(
+#         'hem.html',
+#         step=step_data,
+#         prev_step=prev_step,
+#         next_step=next_step
+#     )
+
 
 @app.route('/hem')
 def hem_index():
+    # redirect to the first hem step (0)
     return redirect(url_for('hem_step', step=0))
-
-# @app.route('/hem/<int:step>')
-# def hem_step(step):
-#     log_page_entry(f"hem/{step}")
-#     return render_template("hem.html", step=hem_steps[step], step_num=step,
-#                            prev_step=step - 1 if step > 0 else None,
-#                            next_step=step + 1 if step < len(hem_steps) - 1 else None)
-
-
-# @app.route('/hem/<int:step>')
-# def hem_step(step):
-#     if step == 6:
-#         return render_template('hem_step6.html', prev_step=5, next_step=7)
-#     elif step == 7:
-#         return render_template('hem_step7.html', prev_step=6, next_step=None)
-#     else:
-#         step_data = hem_steps[step]
-#         prev_step = step - 1 if step > 0 else None
-
-#         if step == 5:
-#             next_step = 6
-#         elif step < 5:
-#             next_step = step + 1
-#         else:
-#             next_step = None
-        
-#         return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
-# @app.route('/hem/<int:step>')
-# def hem_step(step):
-#     if step == 6:
-#         return render_template('hem_step6.html', prev_step=5, next_step=7)
-#     elif step == 7:
-#         return render_template('hem_step7.html', prev_step=6, next_step=None)
-#     step_data = hem_steps[step]
-#     prev_step = step - 1 if step > 0 else None
-#     next_step = step + 1 if step < len(hem_steps) - 1 else None
-#     return render_template('hem.html', step=step_data, prev_step=prev_step, next_step=next_step)
-
-
 
 
 @app.route('/hem/<int:step>')
 def hem_step(step):
-    # — Step 6: show the custom hem_step6.html page —
+    # Special page 6
     if step == 6:
         return render_template(
             'hem_step6.html',
             prev_step=5,
-            next_step=7
+            next_step=7,
+            step_number=6,
+            total_steps=len(hem_steps) + 2  # +2 for these two custom steps
         )
-
-    # — Step 7: show the custom hem_step7.html page and then go to backstitch/1 —
+    # Special page 7
     elif step == 7:
         return render_template(
             'hem_step7.html',
             prev_step=6,
-            next_step=None   # signals “go external” in template
+            next_step=None,
+            step_number=7,
+            total_steps=len(hem_steps) + 2
         )
 
-    # — Standard hemming steps 0–5 —
+    # Regular steps 0–5
     step_data = hem_steps[step]
     prev_step = step - 1 if step > 0 else None
-
-    # if we’re on the last hem_steps index (step 5), route next to step 6
-    if step == len(hem_steps) - 1:
-        next_step = 6
-    else:
-        next_step = step + 1
-
+    next_step = step + 1
     return render_template(
         'hem.html',
         step=step_data,
         prev_step=prev_step,
-        next_step=next_step
+        next_step=next_step,
+        step_number=step,
+        total_steps=len(hem_steps) + 2
     )
+
+
+
+
+
+# @app.route('/backstitch')
+# def backstitch_index():
+#     return redirect(url_for('backstitch_step', step=0))
+
+# @app.route('/backstitch/<int:step>')
+# def backstitch_step(step):
+#     s = backstitch_steps[step]
+#     media_objs = []
+#     for fname in s['media']:
+#         if fname.lower().endswith('.png'):
+#             media_type = 'image'
+#         elif fname.lower().endswith('.mov'):
+#             media_type = 'video'
+#         else:
+#             raise ValueError(f"Unsupported media file type: {fname}")
+#         media_objs.append({
+#             'type': media_type,
+#             'src': f"media/backstitch/{fname}",
+#             'alt': s.get('alts', {}).get(fname, '')
+#         })
+#     return render_template(
+#         "backstitch.html",
+#         media=media_objs,
+#         instructions=s['instructions'],
+#         step_title=s['title'],
+#         prev_step=step-1 if step > 0 else None,
+#         next_step=step+1 if step < len(backstitch_steps) - 1 else None
+#     )
 
 
 
 @app.route('/backstitch')
 def backstitch_index():
+    # redirect to the first backstitch step (0)
     return redirect(url_for('backstitch_step', step=0))
-
-# @app.route('/backstitch/<int:step>')
-# def backstitch_step(step):
-#     log_page_entry(f"backstitch/{step}")
-#     return render_template("backstitch.html", step=backstitch_steps[step],
-#                            prev_step=step - 1 if step > 0 else None,
-#                            next_step=step + 1 if step < len(backstitch_steps) - 1 else None)
 
 @app.route('/backstitch/<int:step>')
 def backstitch_step(step):
@@ -445,29 +497,57 @@ def backstitch_step(step):
             'src': f"media/backstitch/{fname}",
             'alt': s.get('alts', {}).get(fname, '')
         })
+
+    prev_step = step - 1 if step > 0 else None
+    next_step = step + 1 if step < len(backstitch_steps) - 1 else None
     return render_template(
-        "backstitch.html",
+        'backstitch.html',
         media=media_objs,
         instructions=s['instructions'],
         step_title=s['title'],
-        prev_step=step-1 if step > 0 else None,
-        next_step=step+1 if step < len(backstitch_steps) - 1 else None
+        prev_step=prev_step,
+        next_step=next_step,
+        step_number=step,
+        total_steps=len(backstitch_steps)
     )
 
 
 
-@app.route('/slipstitch')
-def slipstitch_index():
-    return redirect(url_for('slipstitch_step', step=0))
+
+# @app.route('/slipstitch')
+# def slipstitch_index():
+#     return redirect(url_for('slipstitch_step', step=0))
 
 # @app.route('/slipstitch/<int:step>')
-# def slipstitch_step(step):  
-#     log_page_entry(f"slipstitch/{step}")
-#     return render_template("slipstitch.html", step=slipstitch_steps[step],
-#                            prev_step=step - 1 if step > 0 else None,
-#                            next_step=step + 1 if step < len(slipstitch_steps) - 1 else None)
+# def slipstitch_step(step):
+#     s = slipstitch_steps[step]
+#     media_objs = []
+#     for fname in s['media']:
+#         if fname.lower().endswith('.png'):
+#             media_type = 'image'
+#         elif fname.lower().endswith('.mov'):
+#             media_type = 'video'
+#         else:
+#             raise ValueError(f"Unsupported media file type: {fname}")
+#         media_objs.append({
+#             'type': media_type,
+#             'src': f"media/slipstitch/{fname}",
+#             'alt': s.get('alts', {}).get(fname, '')
+#         })
+#     return render_template(
+#         "slipstitch.html",
+#         media=media_objs,
+#         instructions=s['instructions'],
+#         step_title=s['title'],
+#         prev_step=step-1 if step > 0 else None,
+#         next_step=step+1 if step < len(slipstitch_steps) - 1 else None
+#     )
 
 
+@app.route('/slipstitch')
+def slipstitch_index():
+    # redirect to the first slipstitch step (0)
+    return redirect(url_for('slipstitch_step', step=0))
 
 @app.route('/slipstitch/<int:step>')
 def slipstitch_step(step):
@@ -485,33 +565,130 @@ def slipstitch_step(step):
             'src': f"media/slipstitch/{fname}",
             'alt': s.get('alts', {}).get(fname, '')
         })
+
+    prev_step = step - 1 if step > 0 else None
+    next_step = step + 1 if step < len(slipstitch_steps) - 1 else None
     return render_template(
-        "slipstitch.html",
+        'slipstitch.html',
         media=media_objs,
         instructions=s['instructions'],
         step_title=s['title'],
-        prev_step=step-1 if step > 0 else None,
-        next_step=step+1 if step < len(slipstitch_steps) - 1 else None
+        prev_step=prev_step,
+        next_step=next_step,
+        step_number=step,
+        total_steps=len(slipstitch_steps)
     )
 
 
-# … all your imports, hem_steps, backstitch_steps, slipstitch_steps, quiz_questions, quiz_responses …
+# # … all your imports, hem_steps, backstitch_steps, slipstitch_steps, quiz_questions, quiz_responses …
 
-@app.route('/quiz', defaults={'qid': None}, methods=['GET','POST'], endpoint='quiz')
-@app.route('/quiz/<int:qid>', methods=['GET','POST'])
+# @app.route('/quiz', defaults={'qid': None}, methods=['GET','POST'], endpoint='quiz')
+# @app.route('/quiz/<int:qid>', methods=['GET','POST'])
+# def quiz(qid):
+#     total = len(quiz_questions)
+
+#     # Redirect to first question if qid is missing or out of range
+#     if qid is None or qid < 1 or qid > total:
+#         quiz_responses.clear()
+#         return redirect(url_for('quiz', qid=1))
+
+#     q = quiz_questions[str(qid)]
+
+#     # Handle form submission
+#     if request.method == 'POST':
+#         # Ordering question
+#         if q.get('type') == 'order':
+#             order_seq = request.form.get('order_sequence', '[]')
+#             try:
+#                 user_order = json.loads(order_seq)
+#             except json.JSONDecodeError:
+#                 user_order = []
+#             correct = (user_order == q['correct_order'])
+#             quiz_responses.append({'qid': qid, 'correct': correct})
+
+#             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
+#             next_qid = qid + 1 if qid < total else None
+
+#             return render_template('quiz.html',
+#                                    qid=qid, total=total,
+#                                    question=q['text'],
+#                                    type='order',
+#                                    show_feedback=True,
+#                                    correct=correct,
+#                                    feedback=feedback,
+#                                    user_order=user_order,
+#                                    next_qid=next_qid)
+
+#         # Multiple-choice / hotspot questions
+#         else:
+#             sel = int(request.form['choice'])
+#             correct = (sel == q['answer'])
+#             quiz_responses.append({'qid': qid, 'selected': sel, 'correct': correct})
+
+#             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
+#             next_qid = qid + 1 if qid < total else None
+
+#             return render_template('quiz.html',
+#                                    qid=qid, total=total,
+#                                    question=q['text'],
+#                                    choices=q['choices'],
+#                                    show_feedback=True,
+#                                    correct=correct,
+#                                    feedback=feedback,
+#                                    images=q['images'],
+#                                    hotspots=q.get('hotspots', []),
+#                                    next_qid=next_qid,
+#                                    selected=sel,
+#                                    answer=q['answer'])
+
+#     # Initial GET: render the question
+#     else:
+#         if q.get('type') == 'order':
+#             return render_template('quiz.html',
+#                                    qid=qid, total=total,
+#                                    question=q['text'],
+#                                    type='order',
+#                                    order_items=q['order_items'])
+#         else:
+#             return render_template('quiz.html',
+#                                    qid=qid, total=total,
+#                                    question=q['text'],
+#                                    choices=q['choices'],
+#                                    show_feedback=False,
+#                                    images=q['images'],
+#                                    hotspots=q.get('hotspots', []),
+#                                    answer=q['answer'])
+
+
+
+# @app.route('/quiz/result')
+# def quiz_result():
+#     total = len(quiz_questions)
+#     score = sum(1 for r in quiz_responses if r['correct'])
+#     return render_template(
+#       'quiz_result.html',
+#       score=score,
+#       total=total
+#     )
+
+
+@app.route('/quiz', defaults={'qid': None}, methods=['GET', 'POST'], endpoint='quiz')
+@app.route('/quiz/<int:qid>', methods=['GET', 'POST'])
 def quiz(qid):
     total = len(quiz_questions)
 
-    # Redirect to first question if qid is missing or out of range
+    # If no qid or out of range, start at 1
     if qid is None or qid < 1 or qid > total:
         quiz_responses.clear()
         return redirect(url_for('quiz', qid=1))
 
+    # Pull the question
     q = quiz_questions[str(qid)]
+    prev_qid = qid - 1 if qid > 1 else None
+    next_qid = qid + 1 if qid < total else None
 
-    # Handle form submission
     if request.method == 'POST':
-        # Ordering question
+        # —— Ordering question —— 
         if q.get('type') == 'order':
             order_seq = request.form.get('order_sequence', '[]')
             try:
@@ -520,72 +697,81 @@ def quiz(qid):
                 user_order = []
             correct = (user_order == q['correct_order'])
             quiz_responses.append({'qid': qid, 'correct': correct})
-
             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
-            next_qid = qid + 1 if qid < total else None
 
-            return render_template('quiz.html',
-                                   qid=qid, total=total,
-                                   question=q['text'],
-                                   type='order',
-                                   show_feedback=True,
-                                   correct=correct,
-                                   feedback=feedback,
-                                   user_order=user_order,
-                                   next_qid=next_qid)
+            return render_template(
+                'quiz.html',
+                qid=qid,
+                total=total,
+                step_number=qid,
+                total_steps=total,
+                question=q['text'],
+                type='order',
+                order_items=q['order_items'],
+                show_feedback=True,
+                correct=correct,
+                feedback=feedback,
+                prev_qid=prev_qid,
+                next_qid=next_qid
+            )
 
-        # Multiple-choice / hotspot questions
+        # —— Multiple-choice / Hotspot question —— 
         else:
-            sel = int(request.form['choice'])
-            correct = (sel == q['answer'])
+            sel = request.form.get('choice', '')
+            # Compare as strings to avoid int/str mismatches
+            correct = (sel == str(q['answer']))
             quiz_responses.append({'qid': qid, 'selected': sel, 'correct': correct})
-
             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
-            next_qid = qid + 1 if qid < total else None
 
-            return render_template('quiz.html',
-                                   qid=qid, total=total,
-                                   question=q['text'],
-                                   choices=q['choices'],
-                                   show_feedback=True,
-                                   correct=correct,
-                                   feedback=feedback,
-                                   images=q['images'],
-                                   hotspots=q.get('hotspots', []),
-                                   next_qid=next_qid,
-                                   selected=sel,
-                                   answer=q['answer'])
+            return render_template(
+                'quiz.html',
+                qid=qid,
+                total=total,
+                step_number=qid,
+                total_steps=total,
+                question=q['text'],
+                choices=q.get('choices', []),
+                images=q.get('images', []),
+                hotspots=q.get('hotspots', []),
+                show_feedback=True,
+                correct=correct,
+                selected=sel,
+                feedback=feedback,
+                answer=str(q['answer']),
+                prev_qid=prev_qid,
+                next_qid=next_qid
+            )
 
-    # Initial GET: render the question
-    else:
-        if q.get('type') == 'order':
-            return render_template('quiz.html',
-                                   qid=qid, total=total,
-                                   question=q['text'],
-                                   type='order',
-                                   order_items=q['order_items'])
-        else:
-            return render_template('quiz.html',
-                                   qid=qid, total=total,
-                                   question=q['text'],
-                                   choices=q['choices'],
-                                   show_feedback=False,
-                                   images=q['images'],
-                                   hotspots=q.get('hotspots', []),
-                                   answer=q['answer'])
-
+    # —— GET request —— 
+    return render_template(
+        'quiz.html',
+        qid=qid,
+        total=total,
+        step_number=qid,
+        total_steps=total,
+        question=q['text'],
+        type=q.get('type'),
+        choices=q.get('choices', []),
+        images=q.get('images', []),
+        hotspots=q.get('hotspots', []),
+        order_items=q.get('order_items', []),
+        show_feedback=False,
+        prev_qid=prev_qid,
+        next_qid=next_qid
+    )
 
 
 @app.route('/quiz/result')
 def quiz_result():
     total = len(quiz_questions)
-    score = sum(1 for r in quiz_responses if r['correct'])
+    score = sum(1 for r in quiz_responses if r.get('correct'))
     return render_template(
-      'quiz_result.html',
-      score=score,
-      total=total
+        'quiz_result.html',
+        score=score,
+        total=total,
+        step_number=total,
+        total_steps=total
     )
-
 
 
 if __name__ == '__main__':

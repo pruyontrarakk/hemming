@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hemming Guide</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='main.css') }}"
+  />
   <style>
     /* —— Color variables —— */
     :root {
@@ -32,12 +35,11 @@
     nav {
       background-color: var(--base-bg);
       border-bottom: 1px solid var(--light-grey);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: center;
       gap: 2rem;
       padding: 0.75rem 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
     }
     nav a {
       position: relative;
@@ -67,29 +69,104 @@
     nav a.active {
       color: var(--accent);
     }
+
+    /* ── Segmented Progress Bar ── */
+    #global-segments {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      width: 60%;
+      margin: 0.75rem auto;
+    }
+    .segment {
+      background: var(--light-grey);
+      border-radius: 3px;
+      overflow: hidden;
+      height: 6px;
+    }
+    .segment .bar {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
   </style>
 </head>
+
 <body>
+  <!-- Navbar -->
   <nav>
-    <a href="{{ url_for('home') }}" class="{% if request.endpoint=='home' %}active{% endif %}">
-      Home
-    </a>
-    <a href="{{ url_for('hem_index') }}" class="{% if request.endpoint=='hem_step' %}active{% endif %}">
-      Hemming
-    </a>
-    <a href="{{ url_for('backstitch_index') }}" class="{% if request.endpoint=='backstitch_step' %}active{% endif %}">
-      Backstitch
-    </a>
-    <a href="{{ url_for('slipstitch_index') }}" class="{% if request.endpoint=='slipstitch_step' %}active{% endif %}">
-      Slipstitch
-    </a>
-    <a href="{{ url_for('quiz') }}" class="{% if request.endpoint=='quiz' %}active{% endif %}">
-      Quiz
-    </a>
+    <a
+      href="{{ url_for('home') }}"
+      class="{% if request.endpoint=='home' %}active{% endif %}"
+      >Home</a
+    >
+    <a
+      href="{{ url_for('hem_index') }}"
+      class="{% if request.endpoint=='hem_step' %}active{% endif %}"
+      >Hemming</a
+    >
+    <a
+      href="{{ url_for('backstitch_index') }}"
+      class="{% if request.endpoint=='backstitch_step' %}active{% endif %}"
+      >Backstitch</a
+    >
+    <a
+      href="{{ url_for('slipstitch_index') }}"
+      class="{% if request.endpoint=='slipstitch_step' %}active{% endif %}"
+      >Slipstitch</a
+    >
+    <a
+      href="{{ url_for('quiz') }}"
+      class="{% if request.endpoint in ['quiz', 'quiz_result'] %}active{% endif %}"
+      >Quiz</a
+    >
   </nav>
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+
+  <!-- Segmented Progress Bar -->
+  <div id="global-segments">
+    {# determine which section we're in #}
+    {% if request.endpoint=='home' %}
+      {% set current = 0 %}
+    {% elif request.endpoint=='hem_step' %}
+      {% set current = 1 %}
+    {% elif request.endpoint=='backstitch_step' %}
+      {% set current = 2 %}
+    {% elif request.endpoint=='slipstitch_step' %}
+      {% set current = 3 %}
+    {% else %}
+      {% set current = 4 %}
+    {% endif %}
+
+    {% for idx in range(section_steps|length) %}
+      {% set this_total = section_steps[idx] %}
+      <div class="segment" style="flex: {{ this_total }};"
+           data-idx="{{ idx }}" data-total="{{ this_total }}">
+        <div class="bar"></div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Page Content -->
+  <main>{% block content %}{% endblock %}</main>
+
+  <!-- Fill the bars via JS -->
+  <script>
+    // currentSection and stepNumber come from Jinja above
+    const current = {{ current }};
+    const stepNumber = {{ step_number }};
+    document
+      .querySelectorAll('#global-segments .segment')
+      .forEach((seg) => {
+        const idx = parseInt(seg.dataset.idx, 10);
+        const tot = parseInt(seg.dataset.total, 10);
+        let pct = 0;
+        if (idx < current) pct = 100;
+        else if (idx === current) pct = (stepNumber / tot) * 100;
+        seg.querySelector('.bar').style.width = pct + '%';
+      });
+  </script>
+
   <script src="{{ url_for('static', filename='project.js') }}"></script>
 </body>
 </html>
