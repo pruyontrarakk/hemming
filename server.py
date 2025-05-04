@@ -579,99 +579,6 @@ def slipstitch_step(step):
         total_steps=len(slipstitch_steps)
     )
 
-
-# # … all your imports, hem_steps, backstitch_steps, slipstitch_steps, quiz_questions, quiz_responses …
-
-# @app.route('/quiz', defaults={'qid': None}, methods=['GET','POST'], endpoint='quiz')
-# @app.route('/quiz/<int:qid>', methods=['GET','POST'])
-# def quiz(qid):
-#     total = len(quiz_questions)
-
-#     # Redirect to first question if qid is missing or out of range
-#     if qid is None or qid < 1 or qid > total:
-#         quiz_responses.clear()
-#         return redirect(url_for('quiz', qid=1))
-
-#     q = quiz_questions[str(qid)]
-
-#     # Handle form submission
-#     if request.method == 'POST':
-#         # Ordering question
-#         if q.get('type') == 'order':
-#             order_seq = request.form.get('order_sequence', '[]')
-#             try:
-#                 user_order = json.loads(order_seq)
-#             except json.JSONDecodeError:
-#                 user_order = []
-#             correct = (user_order == q['correct_order'])
-#             quiz_responses.append({'qid': qid, 'correct': correct})
-
-#             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
-#             next_qid = qid + 1 if qid < total else None
-
-#             return render_template('quiz.html',
-#                                    qid=qid, total=total,
-#                                    question=q['text'],
-#                                    type='order',
-#                                    show_feedback=True,
-#                                    correct=correct,
-#                                    feedback=feedback,
-#                                    user_order=user_order,
-#                                    next_qid=next_qid)
-
-#         # Multiple-choice / hotspot questions
-#         else:
-#             sel = int(request.form['choice'])
-#             correct = (sel == q['answer'])
-#             quiz_responses.append({'qid': qid, 'selected': sel, 'correct': correct})
-
-#             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
-#             next_qid = qid + 1 if qid < total else None
-
-#             return render_template('quiz.html',
-#                                    qid=qid, total=total,
-#                                    question=q['text'],
-#                                    choices=q['choices'],
-#                                    show_feedback=True,
-#                                    correct=correct,
-#                                    feedback=feedback,
-#                                    images=q['images'],
-#                                    hotspots=q.get('hotspots', []),
-#                                    next_qid=next_qid,
-#                                    selected=sel,
-#                                    answer=q['answer'])
-
-#     # Initial GET: render the question
-#     else:
-#         if q.get('type') == 'order':
-#             return render_template('quiz.html',
-#                                    qid=qid, total=total,
-#                                    question=q['text'],
-#                                    type='order',
-#                                    order_items=q['order_items'])
-#         else:
-#             return render_template('quiz.html',
-#                                    qid=qid, total=total,
-#                                    question=q['text'],
-#                                    choices=q['choices'],
-#                                    show_feedback=False,
-#                                    images=q['images'],
-#                                    hotspots=q.get('hotspots', []),
-#                                    answer=q['answer'])
-
-
-
-# @app.route('/quiz/result')
-# def quiz_result():
-#     total = len(quiz_questions)
-#     score = sum(1 for r in quiz_responses if r['correct'])
-#     return render_template(
-#       'quiz_result.html',
-#       score=score,
-#       total=total
-#     )
-
-
 @app.route('/quiz', defaults={'qid': None}, methods=['GET', 'POST'], endpoint='quiz')
 @app.route('/quiz/<int:qid>', methods=['GET', 'POST'])
 def quiz(qid):
@@ -698,6 +605,7 @@ def quiz(qid):
             correct = (user_order == q['correct_order'])
             quiz_responses.append({'qid': qid, 'correct': correct})
             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
+            submitted_items = user_order or q['order_items']
 
             return render_template(
                 'quiz.html',
@@ -708,6 +616,7 @@ def quiz(qid):
                 question=q['text'],
                 type='order',
                 order_items=q['order_items'],
+                user_order=submitted_items,
                 show_feedback=True,
                 correct=correct,
                 feedback=feedback,
@@ -722,6 +631,9 @@ def quiz(qid):
             correct = (sel == str(q['answer']))
             quiz_responses.append({'qid': qid, 'selected': sel, 'correct': correct})
             feedback = q['explanation']['correct'] if correct else q['explanation']['incorrect']
+
+            if qid == total:
+                return redirect(url_for('quiz_result'))
 
             return render_template(
                 'quiz.html',
@@ -765,6 +677,13 @@ def quiz(qid):
 def quiz_result():
     total = len(quiz_questions)
     score = sum(1 for r in quiz_responses if r.get('correct'))
+
+    with open("quiz_scores.csv", "a", newline="") as f:
+        ts = time.strftime("%Y-%m-%d %H:%M:%S")
+        ip = request.remote_addr or "unknown"
+        f.write(f"{ts},{ip},{score},{total}\n")
+    quiz_responses.clear()          # optional: wipe in‑memory answers
+
     return render_template(
         'quiz_result.html',
         score=score,

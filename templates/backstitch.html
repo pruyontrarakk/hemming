@@ -158,7 +158,7 @@
 </div>
 
   <div class="nav-buttons">
-    <a href="{% if prev_step is not none %}{{ url_for('backstitch_step', step=prev_step) }}{% else %}{{ url_for('hem_step', step=7) }}{% endif %}" class="nav-button">← Previous</a>
+    <a href="{% if prev_step is not none %}{{ url_for('backstitch_step', step=prev_step) }}{% else %}{{ url_for('hem_step', step=7) }}{% endif %}" class="nav-button back">← Previous</a>
     <a href="{% if next_step is not none %}{{ url_for('backstitch_step', step=next_step) }}{% else %}{{ url_for('slipstitch_step', step=0) }}{% endif %}" class="nav-button">Next →</a>
   </div>
 {% endblock %}

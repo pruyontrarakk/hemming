@@ -173,6 +173,9 @@
           <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
           <script>
             const sortable = Sortable.create(document.getElementById('order-list'));
+            {% if show_feedback %}
+              Sortable.get(document.getElementById('order-list')).option('disabled', true);
+            {% endif %}
             document.getElementById('quiz-form').addEventListener('submit', () => {
               const items = Array.from(document.querySelectorAll('#order-list li'))
                                  .map(li => li.dataset.text);

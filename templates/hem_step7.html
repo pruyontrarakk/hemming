@@ -121,7 +121,7 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; }
 
   <div class="nav-buttons">
     {% if prev_step is not none %}
-      <a href="{{ url_for('hem_step', step=prev_step) }}" class="nav-button">← Previous</a>
+      <a href="{{ url_for('hem_step', step=prev_step) }}" class="nav-button back">← Previous</a>
     {% endif %}
     
     {% if next_step is not none %}

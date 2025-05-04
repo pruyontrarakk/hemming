@@ -3,7 +3,9 @@
 
 # custom log file
 page_enter_log.txt
+quiz_scores.csv
 
 # DS_Store files in static assets
 static/.DS_Store
 static/media/.DS_Store
+

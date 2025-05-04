@@ -59,5 +59,14 @@
     border-color: #999;
   }
   
+  .nav-button.back {
+    background: var(--light-grey);
+    border-color: var(--light-grey);
+    color: white;
+  }
+  .nav-button.back:hover {
+    background: #d4d4d4;        /* slightly darker on hover */
+    border-color: #d4d4d4;
+  }
 
 

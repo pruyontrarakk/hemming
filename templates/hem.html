@@ -115,7 +115,7 @@
 
   <!-- Navigation -->
   <div class="nav-buttons">
-    <a href="{% if prev_step is not none %}{{ url_for('hem_step', step=prev_step) }}{% else %}{{ url_for('home') }}{% endif %}">← Previous</a>
+    <a href="{% if prev_step is not none %}{{ url_for('hem_step', step=prev_step) }}{% else %}{{ url_for('home') }}{% endif %} " class="nav-button back">← Previous</a>
   
     {% if next_step is not none %}
       <a href="{{ url_for('hem_step', step=next_step) }}">Next →</a>
