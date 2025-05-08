@@ -161,8 +161,24 @@
     </div>
   </div>
 
-  <div class="nav-buttons">
+  <!-- <div class="nav-buttons">
     <a href="{% if prev_step is not none %}{{ url_for('slipstitch_step', step=prev_step) }}{% else %}{{ url_for('backstitch_index') }}{% endif %}" class="nav-button back">← Previous</a>
     <a href="{% if next_step is not none %}{{ url_for('slipstitch_step', step=next_step) }}{% else %}{{ url_for('quiz') }}{% endif %}" class="nav-button">Next →</a>
+  </div> -->
+
+  <div class="nav-buttons">
+    {% if prev_step is not none %}
+      <a href="{{ url_for('slipstitch_step', step=prev_step) }}" class="nav-button back" >Previous</a>
+    {% else %}
+      <a  href="{{ url_for('backstitch_step', step=back_length - 1) }}" class="nav-button back" >Previous</a>
+    {% endif %}
+  
+    {% if next_step is not none %}
+      <a href="{{ url_for('slipstitch_step', step=next_step) }}" class="nav-button" >Next</a>
+    {% else %}
+      <a href="{{ url_for('quiz') }}" class="nav-button" >Next</a>
+    {% endif %}
   </div>
+
+  
 {% endblock %}

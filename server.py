@@ -333,10 +333,6 @@ def log_page_entry(page_name):
         ip = request.remote_addr or "unknown"
         f.write(f"{timestamp} - {ip} - {page_name}\n")
 
-# @app.route('/')
-# def home():
-#    return render_template('home.html')  
-
 
 @app.context_processor
 def inject_section_data():
@@ -359,46 +355,6 @@ def home():
                            step_number=1,
                            total_steps=1)
 
-
-# @app.route('/hem')
-# def hem_index():
-#     return redirect(url_for('hem_step', step=0))
-
-
-# @app.route('/hem/<int:step>')
-# def hem_step(step):
-#     # — Step 6: show the custom hem_step6.html page —
-#     if step == 6:
-#         return render_template(
-#             'hem_step6.html',
-#             prev_step=5,
-#             next_step=7
-#         )
-
-#     # — Step 7: show the custom hem_step7.html page and then go to backstitch/1 —
-#     elif step == 7:
-#         return render_template(
-#             'hem_step7.html',
-#             prev_step=6,
-#             next_step=None   # signals “go external” in template
-#         )
-
-#     # — Standard hemming steps 0–5 —
-#     step_data = hem_steps[step]
-#     prev_step = step - 1 if step > 0 else None
-
-#     # if we’re on the last hem_steps index (step 5), route next to step 6
-#     if step == len(hem_steps) - 1:
-#         next_step = 6
-#     else:
-#         next_step = step + 1
-
-#     return render_template(
-#         'hem.html',
-#         step=step_data,
-#         prev_step=prev_step,
-#         next_step=next_step
-#     )
 
 
 @app.route('/hem')
@@ -444,38 +400,6 @@ def hem_step(step):
 
 
 
-
-# @app.route('/backstitch')
-# def backstitch_index():
-#     return redirect(url_for('backstitch_step', step=0))
-
-# @app.route('/backstitch/<int:step>')
-# def backstitch_step(step):
-#     s = backstitch_steps[step]
-#     media_objs = []
-#     for fname in s['media']:
-#         if fname.lower().endswith('.png'):
-#             media_type = 'image'
-#         elif fname.lower().endswith('.mov'):
-#             media_type = 'video'
-#         else:
-#             raise ValueError(f"Unsupported media file type: {fname}")
-#         media_objs.append({
-#             'type': media_type,
-#             'src': f"media/backstitch/{fname}",
-#             'alt': s.get('alts', {}).get(fname, '')
-#         })
-#     return render_template(
-#         "backstitch.html",
-#         media=media_objs,
-#         instructions=s['instructions'],
-#         step_title=s['title'],
-#         prev_step=step-1 if step > 0 else None,
-#         next_step=step+1 if step < len(backstitch_steps) - 1 else None
-#     )
-
-
-
 @app.route('/backstitch')
 def backstitch_index():
     # redirect to the first backstitch step (0)
@@ -513,37 +437,6 @@ def backstitch_step(step):
 
 
 
-
-# @app.route('/slipstitch')
-# def slipstitch_index():
-#     return redirect(url_for('slipstitch_step', step=0))
-
-# @app.route('/slipstitch/<int:step>')
-# def slipstitch_step(step):
-#     s = slipstitch_steps[step]
-#     media_objs = []
-#     for fname in s['media']:
-#         if fname.lower().endswith('.png'):
-#             media_type = 'image'
-#         elif fname.lower().endswith('.mov'):
-#             media_type = 'video'
-#         else:
-#             raise ValueError(f"Unsupported media file type: {fname}")
-#         media_objs.append({
-#             'type': media_type,
-#             'src': f"media/slipstitch/{fname}",
-#             'alt': s.get('alts', {}).get(fname, '')
-#         })
-#     return render_template(
-#         "slipstitch.html",
-#         media=media_objs,
-#         instructions=s['instructions'],
-#         step_title=s['title'],
-#         prev_step=step-1 if step > 0 else None,
-#         next_step=step+1 if step < len(slipstitch_steps) - 1 else None
-#     )
-
-
 @app.route('/slipstitch')
 def slipstitch_index():
     # redirect to the first slipstitch step (0)
@@ -575,6 +468,7 @@ def slipstitch_step(step):
         step_title=s['title'],
         prev_step=prev_step,
         next_step=next_step,
+        back_length=len(backstitch_steps),
         step_number=step,
         total_steps=len(slipstitch_steps)
     )
